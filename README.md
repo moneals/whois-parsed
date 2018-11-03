@@ -12,7 +12,7 @@ Inspiration (and regex) borrowed from the python library https://bitbucket.org/r
 ## Usage
 ```
 (async function(){
-  const whois = require('whois-parsed/index.js');
+  const whois = require('whois-parsed');
 
   var results = await whois('google.com');
   console.log(JSON.stringify(results, null, 2));
