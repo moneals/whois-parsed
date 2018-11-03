@@ -1,6 +1,6 @@
 {
   "name": "whois-parsed",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds",
   "main": "index.js",
   "scripts": {
