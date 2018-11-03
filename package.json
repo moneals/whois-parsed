@@ -1,0 +1,29 @@
+{
+  "name": "whois-parsed",
+  "version": "0.1.0",
+  "description": "A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moneals/whois-parsed.git"
+  },
+  "keywords": [
+    "whois"
+  ],
+  "author": "Michael Smith <michael@juniperbay.com> (http://www.michaelosmith.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/moneals/whois-parsed/issues"
+  },
+  "homepage": "https://github.com/moneals/whois-parsed#readme",
+  "engines": {
+    "node": ">=4.2.4"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}
