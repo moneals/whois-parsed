@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/moneals/whois-parsed.svg?branch=master)](https://travis-ci.org/moneals/whois-parsed)
 # whois-parsed
 A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds.
 
