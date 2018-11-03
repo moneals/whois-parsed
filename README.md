@@ -10,7 +10,31 @@ Inspiration (and regex) borrowed from the python library https://bitbucket.org/r
   `npm install whois-parsed`
 
 ## Usage
+```
+(async function(){
+  const whois = require('whois-parsed/index.js');
 
+  var results = await whois('google.com');
+  console.log(JSON.stringify(results, null, 2));
+})()
+
+{
+  "domainName": "google.com",
+  "updatedDate": "2018-02-21T10:45:07-0800",
+  "creationDate": "1997-09-15T00:00:00-0700",
+  "expirationDate": "2020-09-13T21:00:00-0700",
+  "registrar": "MarkMonitor, Inc.",
+  "status": [
+    "clientUpdateProhibited (https://www.icann.org/epp#clientUpdateProhibited)",
+    "clientTransferProhibited (https://www.icann.org/epp#clientTransferProhibited)",
+    "clientDeleteProhibited (https://www.icann.org/epp#clientDeleteProhibited)",
+    "serverUpdateProhibited (https://www.icann.org/epp#serverUpdateProhibited)",
+    "serverTransferProhibited (https://www.icann.org/epp#serverTransferProhibited)",
+    "serverDeleteProhibited (https://www.icann.org/epp#serverDeleteProhibited)"
+  ],
+  "isAvailable": false
+}
+```
 
 ## Tests
 
