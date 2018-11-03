@@ -1,46 +1,33 @@
-'use strict';
+const chai = require('chai');
+const expect = chai.expect;
+chai.use(require('chai-datetime'));
+const assert = chai.assert;
+var whoisParser = require('../index');
 
-var expect = require('chai').expect;
-var numFormatter = require('../index');
+function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+  var result = '';
+  for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+  return result;
+}
 
-describe('#numFormatter', function() {
-    it('should convert single digits', function() {
-        var result = numFormatter(1);
-        expect(result).to.equal('1');
+describe('#whoisParser', function() {
+    it('google.com should not be available', async function() {
+        var result = await whoisParser('google.com');
+        expect(result['domainName']).to.equal('google.com');
+        expect(result['isAvailable']).to.equal(false);
+        assert.beforeDate(new Date(), new Date(result['expirationDate']));
+        assert.afterDate(new Date(), new Date(result['creationDate']));
+        assert.afterDate(new Date(), new Date(result['updatedDate']));
     });
+    
+    it('random .com domain should be available', async function() {
+        var rString = randomString(32);
+        var result = await whoisParser(rString + '.com');
+        expect(result['domainName']).to.equal(rString + '.com');
+        expect(result['isAvailable']).to.equal(true);
+        expect(result.hasOwnProperty('creationDate')).to.be.false;
+        expect(result.hasOwnProperty('updatedDate')).to.be.false;
+        expect(result.hasOwnProperty('expirationDate')).to.be.false;
 
-    it('should convert double digits', function() {
-        var result = numFormatter(12);
-        expect(result).to.equal('12');
-    });
-
-    it('should convert triple digits', function() {
-        var result = numFormatter(123);
-        expect(result).to.equal('123');
-    });
-
-    it('should convert 4 digits', function() {
-        var result = numFormatter(1234);
-        expect(result).to.equal('1,234');
-    });
-
-    it('should convert 5 digits', function() {
-        var result = numFormatter(12345);
-        expect(result).to.equal('12,345');
-    });
-
-    it('should convert 6 digits', function() {
-        var result = numFormatter(123456);
-        expect(result).to.equal('123,456');
-    });
-
-    it('should convert 7 digits', function() {
-        var result = numFormatter(1234567);
-        expect(result).to.equal('1,234,567');
-    });
-
-    it('should convert 8 digits', function() {
-        var result = numFormatter(12345678);
-        expect(result).to.equal('12,345,678');
     });
 });
