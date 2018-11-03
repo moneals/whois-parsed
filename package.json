@@ -4,7 +4,8 @@
   "description": "A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "mocha --reporter spec",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,8 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0"
   }
 }
