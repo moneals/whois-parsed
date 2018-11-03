@@ -13,6 +13,7 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
 describe('#whoisParser', function() {
     it('google.com should not be available', async function() {
         var result = await whoisParser('google.com');
+        console.log(JSON.stringify(result, null, 2));
         expect(result['domainName']).to.equal('google.com');
         expect(result['isAvailable']).to.equal(false);
         assert.beforeDate(new Date(), new Date(result['expirationDate']));
