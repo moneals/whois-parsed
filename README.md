@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/moneals/whois-parsed.svg?branch=master)](https://travis-ci.org/moneals/whois-parsed)
+[![Build Status](https://travis-ci.org/moneals/whois-parsed.svg?branch=master)](https://travis-ci.org/moneals/whois-parsed)[![Coverage Status](https://coveralls.io/repos/github/moneals/whois-parsed/badge.svg?branch=master)](https://coveralls.io/github/moneals/whois-parsed?branch=master)
 # whois-parsed
 A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds.
 
