@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/moneals/whois-parsed.svg?branch=master)](https://travis-ci.org/moneals/whois-parsed) [![Coverage Status](https://coveralls.io/repos/github/moneals/whois-parsed/badge.svg?branch=master)](https://coveralls.io/github/moneals/whois-parsed?branch=master)
 
 # whois-parsed
-A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds.
+A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds. Supports proxies requiring authentication with username and password.
 
 Inspiration (and regex) borrowed from the python library https://bitbucket.org/richardpenman/pywhois
 
@@ -11,13 +11,25 @@ Inspiration (and regex) borrowed from the python library https://bitbucket.org/r
 
 ## Usage
 ```
+var whoisOptions = {
+  proxy: {
+    ipaddress: '111.222.33.44',
+    port: 1085,
+    authentication: {
+        username: "youruser",
+        password: "yourpassword"
+    },
+    type: 5
+  }
+};
 (async function(){
   const whois = require('whois-parsed');
 
-  var results = await whois('google.com');
+  var results = await whois('google.com', whoisOptions);
   console.log(JSON.stringify(results, null, 2));
 })()
 
+Output:
 {
   "domainName": "google.com",
   "updatedDate": "2018-02-21T10:45:07-0800",
