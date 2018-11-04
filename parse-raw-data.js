@@ -1,6 +1,6 @@
 // const changeCase = require('change-case'),
 
-var comRegex = {
+var defaultRegex = {
     'domainName':          'Domain Name: *(.+)',
     'registrar':            'Registrar: *(.+)',
     'updatedDate':         'Updated Date: *(.+)',
@@ -9,18 +9,24 @@ var comRegex = {
     'status':               'Status: *(.+)'
 };
 
-var parseRawData = function(rawData) {
-	
+var parseRawData = function(rawData, domain) {
+	if (rawData == null) {
+	  throw new Error('No Whois data received');
+	}
 	var result = {};	
 	var lines = rawData.split('\n');
 	
 	lines.forEach(function(line){
 	  line = line.trim();
-		//console.log(line);
-		Object.keys(comRegex).forEach(function(key) {
-      var regex = new RegExp(comRegex[key], 'i');
+	  var domainRegex = '';
+	  if (domain.endsWith('.com') || domain.endsWith('.net')) {
+	    domainRegex = defaultRegex;
+	  } else {
+	    throw new Error('TLD not supported');
+	  }
+		Object.keys(domainRegex).forEach(function(key) {
+      var regex = new RegExp(domainRegex[key], 'i');
       if (line.match(regex)) {
-        //console.log(line + ' matches ' + comRegex[key]);
         var value = line.match(regex)[line.match(regex).length-1];
         if (key === 'status') {
           if (result[key]) {
