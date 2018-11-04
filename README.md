@@ -47,6 +47,9 @@ Output:
   "isAvailable": false
 }
 ```
+## Errors
+
+whois-parsed does not handle retry logic by design. It isn't uncommon to have whois lookups throw errors if your application gets blocked or rate limited due to too many whois calls. You should implement retry logic, rate limiting, proxies, etc. in your application as needed.
 
 ## Tests
 
