@@ -1,5 +1,3 @@
-// const changeCase = require('change-case'),
-
 var defaultRegex = {
     'domainName':          'Domain Name: *(.+)',
     'registrar':            'Registrar: *(.+)',
@@ -19,7 +17,7 @@ var parseRawData = function(rawData, domain) {
 	lines.forEach(function(line){
 	  line = line.trim();
 	  var domainRegex = '';
-	  if (domain.endsWith('.com') || domain.endsWith('.net')) {
+	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org')) {
 	    domainRegex = defaultRegex;
 	  } else {
 	    throw new Error('TLD not supported');
@@ -40,7 +38,7 @@ var parseRawData = function(rawData, domain) {
       }
     });
 	});
-	
+	//console.log(domain + ' rawdata: ' + rawData);
 	if (result.hasOwnProperty('expirationDate')) {
 	  result['isAvailable'] = false;
 	} else {

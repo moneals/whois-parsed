@@ -31,18 +31,23 @@ async function testAvailable (tld) {
     
 describe('#whoisParser', function() {
     it('known .com should not be available', async function () {
-      await testNotAvailable(('.com'));
+      await testNotAvailable('.com');
     });
-    
     it('random .com domain should be available', async function() {
       await testAvailable('.com');
     });
     
     it('known .net should not be available', async function () {
-      await testNotAvailable(('.net'));
+      await testNotAvailable('.net');
     });
-    
     it('random .net domain should be available', async function() {
       await testAvailable('.net');
+    });
+    
+    it('known .org should not be available', async function () {
+      await testNotAvailable('.org');
+    });
+    it('random .org domain should be available', async function() {
+      await testAvailable('.org');
     });
 });
