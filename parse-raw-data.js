@@ -17,7 +17,7 @@ var parseRawData = function(rawData, domain) {
 	lines.forEach(function(line){
 	  line = line.trim();
 	  var domainRegex = '';
-	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') || domain.endsWith('.me')) {
+	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') || domain.endsWith('.name') || domain.endsWith('.me')) {
 	    domainRegex = defaultRegex;
 	  } else {
 	    throw new Error('TLD not supported');

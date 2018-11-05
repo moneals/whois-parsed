@@ -12,13 +12,19 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
   return result;
 }
 
-async function testNotAvailable (tld) {
+async function testNotAvailable (tld, options = {}) {
   var result = await whoisParser('google' + tld);
   expect(result['domainName']).to.equal('google' + tld);
   expect(result['isAvailable']).to.equal(false);
-  assert.beforeDate(new Date(), new Date(result['expirationDate']));
-  assert.afterDate(new Date(), new Date(result['creationDate']));
-  assert.afterDate(new Date(), new Date(result['updatedDate']));
+  if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('expirationDate'))) {
+    assert.beforeDate(new Date(), new Date(result['expirationDate']));
+  }
+  if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('creationDate'))) {
+    assert.afterDate(new Date(), new Date(result['creationDate']));
+  }
+  if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('updatedDate'))) {
+    assert.afterDate(new Date(), new Date(result['updatedDate']));
+  }
   expect(result['status'].length).to.be.above(0);
 }
 
@@ -53,6 +59,13 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .org domain should be available', async function() {
       await testAvailable('.org');
+    });
+    
+    it('known .name should not be available and have data', async function () {
+      await testNotAvailable('.name', { excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
+    });
+    it('random .name domain should be available', async function() {
+      await testAvailable('.name');
     });
     
     it('known .me should not be available and have data', async function () {
