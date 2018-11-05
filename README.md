@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/moneals/whois-parsed.svg?branch=master)](https://travis-ci.org/moneals/whois-parsed) [![Coverage Status](https://coveralls.io/repos/github/moneals/whois-parsed/badge.svg?branch=master)](https://coveralls.io/github/moneals/whois-parsed?branch=master)
 
 # whois-parsed
-A wrapper for the fantastic whois module that parses whois data into consistent fields across multiple tlds. Supports proxies requiring authentication with username and password.
+A wrapper for the fantastic whois module that parses whois data into consistent JSON across multiple tlds. Supports proxies requiring authentication with username and password.
 
 Inspiration (and regex) borrowed from the python library https://bitbucket.org/richardpenman/pywhois
 
