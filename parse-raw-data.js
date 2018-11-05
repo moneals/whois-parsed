@@ -1,10 +1,10 @@
 var defaultRegex = {
-    'domainName':          'Domain Name: *(.+)',
-    'registrar':            'Registrar: *(.+)',
-    'updatedDate':         'Updated Date: *(.+)',
-    'creationDate':        'Creation Date: *(.+)',
-    'expirationDate':      'Expir\\w+ Date: *(.+)',
-    'status':               'Status: *(.+)'
+  'domainName':          'Domain Name: *(.+)',
+  'registrar':            'Registrar: *(.+)',
+  'updatedDate':         'Updated Date: *(.+)',
+  'creationDate':        'Creation Date: *(.+)',
+  'expirationDate':      'Expir\\w+ Date: *(.+)',
+  'status':               'Status: *(.+)'
 };
 
 var parseRawData = function(rawData, domain) {
@@ -17,7 +17,7 @@ var parseRawData = function(rawData, domain) {
 	lines.forEach(function(line){
 	  line = line.trim();
 	  var domainRegex = '';
-	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org')) {
+	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') || domain.endsWith('.me')) {
 	    domainRegex = defaultRegex;
 	  } else {
 	    throw new Error('TLD not supported');
@@ -32,18 +32,20 @@ var parseRawData = function(rawData, domain) {
           } else {
             result[key] = [value];
           }
+        } else if (key === 'domainName') {
+          result[key] = value.toLowerCase();
         } else {
           result[key] = value;
         }
       }
     });
 	});
-	//console.log(domain + ' rawdata: ' + rawData);
-	if (result.hasOwnProperty('expirationDate')) {
+	if (result.hasOwnProperty('status') && result.status.length >= 1) {
 	  result['isAvailable'] = false;
 	} else {
 	  result['isAvailable'] = true;
 	}
+	//console.log(result);
 	return result;
 };
 

@@ -6,6 +6,7 @@ var lookup = util.promisify(whois.lookup);
 
 module.exports = async function(domain, options){
   var rawData = await lookup(domain, options || {});
+  //console.log(domain + ' rawData:\n' + rawData);
 	
 	var result = { domainName: domain };
 
