@@ -47,6 +47,27 @@ Output:
   "isAvailable": false
 }
 ```
+
+## Response Data
+### domainName
+Domain Name being searched.
+Always populated.
+### isAvailable
+true if the domain name is available.
+false if the domain name is currently registered.
+Always populated.
+### status
+Array of status codes for the domain.
+Always populated.
+### creationDate
+Date the domain was first registered for this particular registration. This date is reset when a domain expires but not when a domain registration is renewed.
+Not populated for some TLDs.
+### expirationDate
+Date the domain registration is set to expire. This date can be extended by the registrant.
+Not populated for some TLDs.
+### updatedDate
+Date the domain WHOIS record was last updated. Not populated for some TLDs.
+
 ## Errors
 
 whois-parsed does not handle retry logic by design. It isn't uncommon to have whois lookups throw errors if your application gets blocked or rate limited due to too many whois calls. You should implement retry logic, rate limiting, proxies, etc. in your application as needed.
