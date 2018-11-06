@@ -39,22 +39,23 @@ var parseRawData = function(rawData, domain) {
 	var result = {domainName: domain };	
 	var lines = rawData.split('\n');
 	
+	var domainRegex = '';
+  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') 
+  || domain.endsWith('.name') || domain.endsWith('.me')) {
+    domainRegex = defaultRegex;
+  } else if (domain.endsWith('.au')) {
+    domainRegex = auRegex;
+    console.log(rawData);
+  } else if (domain.endsWith('.ru')) {
+    domainRegex = ruRegex;
+  } else if (domain.endsWith('.us')) {
+    domainRegex = usRegex;
+  } else {
+    throw new Error('TLD not supported');
+  }
+	
 	lines.forEach(function(line){
 	  line = line.trim();
-	  var domainRegex = '';
-	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') 
-	  || domain.endsWith('.name') || domain.endsWith('.me')) {
-	    domainRegex = defaultRegex;
-	  } else if (domain.endsWith('.au')) {
-	    domainRegex = auRegex;
-	    console.log(rawData);
-	  } else if (domain.endsWith('.ru')) {
-	    domainRegex = ruRegex;
-	  } else if (domain.endsWith('.us')) {
-	    domainRegex = usRegex;
-	  } else {
-	    throw new Error('TLD not supported');
-	  }
 		Object.keys(domainRegex).forEach(function(key) {
       var regex = new RegExp(domainRegex[key], 'i');
       if (line.match(regex)) {
