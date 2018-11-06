@@ -12,9 +12,9 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
   return result;
 }
 
-async function testNotAvailable (tld, options = {}) {
-  var result = await whoisParser('google' + tld);
-  expect(result['domainName']).to.equal('google' + tld);
+async function testNotAvailable (base, tld, options = {}) {
+  var result = await whoisParser(base + tld);
+  expect(result['domainName']).to.equal(base + tld);
   expect(result['isAvailable']).to.equal(false);
   if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('expirationDate'))) {
     assert.beforeDate(new Date(), new Date(result['expirationDate']));
@@ -41,37 +41,44 @@ async function testAvailable (tld) {
     
 describe('#whoisParser integration tests', function() {
     it('known .com should not be available and have data', async function () {
-      await testNotAvailable('.com');
+      await testNotAvailable('google', '.com');
     });
     it('random .com domain should be available', async function() {
       await testAvailable('.com');
     });
     
     it('known .net should not be available and have data', async function () {
-      await testNotAvailable('.net');
+      await testNotAvailable('google', '.net');
     });
     it('random .net domain should be available', async function() {
       await testAvailable('.net');
     });
     
     it('known .org should not be available and have data', async function () {
-      await testNotAvailable('.org');
+      await testNotAvailable('google', '.org');
     });
     it('random .org domain should be available', async function() {
       await testAvailable('.org');
     });
     
     it('known .name should not be available and have data', async function () {
-      await testNotAvailable('.name', { excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
+      await testNotAvailable('google', '.name', { excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
     });
     it('random .name domain should be available', async function() {
       await testAvailable('.name');
     });
     
     it('known .me should not be available and have data', async function () {
-      await testNotAvailable('.me');
+      await testNotAvailable('google', '.me');
     });
     it('random .me domain should be available', async function() {
       await testAvailable('.me');
+    });
+    
+    it('known .au should not be available and have data', async function () {
+      await testNotAvailable('google.com', '.au', { excludedFields: ['creationDate', 'expirationDate']});
+    });
+    it('random .au domain should be available', async function() {
+      await testAvailable('.com.au');
     });
 });

@@ -8,7 +8,7 @@ module.exports = async function(domain, options){
   var rawData = await lookup(domain, options || {});
   //console.log(domain + ' rawData:\n' + rawData);
 	
-	var result = { domainName: domain };
+	var result = {};
 
   if ( typeof rawData === 'object' ) {
 		result = rawData.map(function(data) {

@@ -7,18 +7,28 @@ var defaultRegex = {
   'status':               'Status: *(.+)'
 };
 
+var auRegex = {
+    'domainName':                    'Domain Name: *(.+)',
+    'updatedDate':			      'Last Modified: *(.+)',
+    'registrar':                      'Registrar Name: *(.+)',
+    'status':                         'Status: *(.+)'
+}
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
 	}
-	var result = {};	
+	var result = {domainName: domain };	
 	var lines = rawData.split('\n');
 	
 	lines.forEach(function(line){
 	  line = line.trim();
 	  var domainRegex = '';
-	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') || domain.endsWith('.name') || domain.endsWith('.me')) {
+	  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') 
+	  || domain.endsWith('.name') || domain.endsWith('.me')) {
 	    domainRegex = defaultRegex;
+	  } else if (domain.endsWith('.au')) {
+	    domainRegex = auRegex;
 	  } else {
 	    throw new Error('TLD not supported');
 	  }
@@ -45,7 +55,8 @@ var parseRawData = function(rawData, domain) {
 	} else {
 	  result['isAvailable'] = true;
 	}
-	//console.log(result);
+// 	console.log(rawData);
+// 	console.log(result);
 	return result;
 };
 
