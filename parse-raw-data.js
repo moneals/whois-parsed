@@ -14,6 +14,14 @@ var auRegex = {
     'status':                         'Status: *(.+)'
 }
 
+var ruRegex = {
+    'domainName': 'domain: *(.+)',
+    'registrar': 'registrar: *(.+)',
+    'creationDate': 'created: *(.+)',
+    'expirationDate': 'paid-till: *(.+)',
+    'status': 'state: *(.+)'
+}
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
@@ -29,6 +37,8 @@ var parseRawData = function(rawData, domain) {
 	    domainRegex = defaultRegex;
 	  } else if (domain.endsWith('.au')) {
 	    domainRegex = auRegex;
+	  } else if (domain.endsWith('.ru')) {
+	    domainRegex = ruRegex;
 	  } else {
 	    throw new Error('TLD not supported');
 	  }

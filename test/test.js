@@ -81,4 +81,11 @@ describe('#whoisParser integration tests', function() {
     it('random .au domain should be available', async function() {
       await testAvailable('.com.au');
     });
+    
+    it('known .ru should not be available and have data', async function () {
+      await testNotAvailable('google', '.ru', { excludedFields: ['updatedDate']});
+    });
+    it('random .ru domain should be available', async function() {
+      await testAvailable('.ru');
+    });
 });
