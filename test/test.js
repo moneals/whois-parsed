@@ -4,7 +4,7 @@ chai.use(require('chai-datetime'));
 const assert = chai.assert;
 var whoisParser = require('../index');
 
-//TODO Add unit tests that use stored whois responses
+//TODO Add unit tests that use stored whois responses when hit connection reset or rate limit error
 
 function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
   var result = '';
@@ -14,6 +14,9 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
 
 async function testNotAvailable (base, tld, options = {}) {
   var result = await whoisParser(base + tld);
+  if (tld === '.au') {
+    console.log (result);
+  }
   expect(result['domainName']).to.equal(base + tld);
   expect(result['isAvailable']).to.equal(false);
   if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('expirationDate'))) {
@@ -87,5 +90,12 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .ru domain should be available', async function() {
       await testAvailable('.ru');
+    });
+    
+    it('known .us should not be available and have data', async function () {
+      await testNotAvailable('google', '.us');
+    });
+    it('random .us domain should be available', async function() {
+      await testAvailable('.us');
     });
 });

@@ -11,8 +11,18 @@ var auRegex = {
     'domainName':                    'Domain Name: *(.+)',
     'updatedDate':			      'Last Modified: *(.+)',
     'registrar':                      'Registrar Name: *(.+)',
-    'status':                         'Status: *(.+)'
-}
+    'status':                         'Status: *(.+)',
+    'rateLimited':                    'WHOIS LIMIT EXCEEDED'
+};
+
+var usRegex = {
+  'domainName':                    'Domain Name: *(.+)',
+  'registrar':                      'Sponsoring Registrar: *(.+)',
+  'status':                         'Domain Status: *(.+)',
+  'creationDate':                  'Creation Date: *(.+)',
+  'expirationDate':                'Registry Expiry Date: *(.+)',
+  'updatedDate':                   'Updated Date: *(.+)',
+};
 
 var ruRegex = {
     'domainName': 'domain: *(.+)',
@@ -20,7 +30,7 @@ var ruRegex = {
     'creationDate': 'created: *(.+)',
     'expirationDate': 'paid-till: *(.+)',
     'status': 'state: *(.+)'
-}
+};
 
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
@@ -37,25 +47,32 @@ var parseRawData = function(rawData, domain) {
 	    domainRegex = defaultRegex;
 	  } else if (domain.endsWith('.au')) {
 	    domainRegex = auRegex;
+	    console.log(rawData);
 	  } else if (domain.endsWith('.ru')) {
 	    domainRegex = ruRegex;
+	  } else if (domain.endsWith('.us')) {
+	    domainRegex = usRegex;
 	  } else {
 	    throw new Error('TLD not supported');
 	  }
 		Object.keys(domainRegex).forEach(function(key) {
       var regex = new RegExp(domainRegex[key], 'i');
       if (line.match(regex)) {
-        var value = line.match(regex)[line.match(regex).length-1];
-        if (key === 'status') {
-          if (result[key]) {
-            result[key].push(value);
-          } else {
-            result[key] = [value];
-          }
-        } else if (key === 'domainName') {
-          result[key] = value.toLowerCase();
+        if (key === 'rateLimited') {
+          throw new Error('Rate Limited');
         } else {
-          result[key] = value;
+          var value = line.match(regex)[line.match(regex).length-1];
+          if (key === 'status') {
+            if (result[key]) {
+              result[key].push(value);
+            } else {
+              result[key] = [value];
+            }
+          } else if (key === 'domainName') {
+            result[key] = value.toLowerCase();
+          } else {
+            result[key] = value;
+          }
         }
       }
     });
