@@ -4,7 +4,28 @@ var defaultRegex = {
   'updatedDate':         'Updated Date: *(.+)',
   'creationDate':        'Creation Date: *(.+)',
   'expirationDate':      'Expir\\w+ Date: *(.+)',
-  'status':               'Status: *(.+)'
+  'status':               'Status: *(.+)',
+  'notFound':             '^No match for '
+};
+
+var orgRegex = {
+  'domainName':          'Domain Name: *(.+)',
+  'registrar':            'Registrar: *(.+)',
+  'updatedDate':         'Updated Date: *(.+)',
+  'creationDate':        'Creation Date: *(.+)',
+  'expirationDate':      'Expir\\w+ Date: *(.+)',
+  'status':               'Status: *(.+)',
+  'notFound':             '^NOT FOUND'
+};
+
+var meRegex = {
+  'domainName':          'Domain Name: *(.+)',
+  'registrar':            'Registrar: *(.+)',
+  'updatedDate':         'Updated Date: *(.+)',
+  'creationDate':        'Creation Date: *(.+)',
+  'expirationDate':      'Expir\\w+ Date: *(.+)',
+  'status':               'Status: *(.+)',
+  'notFound':             '^NOT FOUND'
 };
 
 var auRegex = {
@@ -12,7 +33,8 @@ var auRegex = {
     'updatedDate':			      'Last Modified: *(.+)',
     'registrar':                      'Registrar Name: *(.+)',
     'status':                         'Status: *(.+)',
-    'rateLimited':                    'WHOIS LIMIT EXCEEDED'
+    'rateLimited':                    'WHOIS LIMIT EXCEEDED',
+    'notFound':                       '^NOT FOUND'
 };
 
 var usRegex = {
@@ -22,6 +44,7 @@ var usRegex = {
   'creationDate':                  'Creation Date: *(.+)',
   'expirationDate':                'Registry Expiry Date: *(.+)',
   'updatedDate':                   'Updated Date: *(.+)',
+  'notFound':                      '^No Data Found'
 };
 
 var ruRegex = {
@@ -29,7 +52,18 @@ var ruRegex = {
     'registrar': 'registrar: *(.+)',
     'creationDate': 'created: *(.+)',
     'expirationDate': 'paid-till: *(.+)',
-    'status': 'state: *(.+)'
+    'status': 'state: *(.+)',
+    'notFound': 'No entries found'
+};
+
+var ukRegex = {
+    'domainName':                    'Domain name:\\s*(.+)',
+    'registrar':                      'Registrar:\\s*(.+)',
+    'status':                         'Registration status:\\s*(.+)',
+    'creationDate':                  'Registered on:\\s*(.+)',
+    'expirationDate':                'Expiry date:\\s*(.+)',
+    'updatedDate':                   'Last updated:\\s*(.+)',
+    'notFound':                       'No match for '
 };
 
 var parseRawData = function(rawData, domain) {
@@ -40,16 +74,20 @@ var parseRawData = function(rawData, domain) {
 	var lines = rawData.split('\n');
 	
 	var domainRegex = '';
-  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.org') 
-  || domain.endsWith('.name') || domain.endsWith('.me')) {
+  if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.name')) {
     domainRegex = defaultRegex;
+  } else if (domain.endsWith('.org')) {
+    domainRegex = orgRegex;
+  } else if (domain.endsWith('.me')) {
+    domainRegex = meRegex;
   } else if (domain.endsWith('.au')) {
     domainRegex = auRegex;
-    console.log(rawData);
   } else if (domain.endsWith('.ru')) {
     domainRegex = ruRegex;
   } else if (domain.endsWith('.us')) {
     domainRegex = usRegex;
+  } else if (domain.endsWith('.uk')) {
+    domainRegex = ukRegex;
   } else {
     throw new Error('TLD not supported');
   }
@@ -61,14 +99,29 @@ var parseRawData = function(rawData, domain) {
       if (line.match(regex)) {
         if (key === 'rateLimited') {
           throw new Error('Rate Limited');
+        } if (key === 'notFound') {
+          // check if value set first to avoid false positives from quirky WHOIS data
+          if (!result.hasOwnProperty('isAvailable')) {
+              result['isAvailable'] = true;
+            }
         } else {
           var value = line.match(regex)[line.match(regex).length-1];
           if (key === 'status') {
+            // Set isAvailable to false based on a status being found
+            if (!result.hasOwnProperty('isAvailable')) {
+              result['isAvailable'] = false;
+            }
             if (result[key]) {
               result[key].push(value);
             } else {
               result[key] = [value];
             }
+          } else if (key === 'expirationDate') {
+            // Set isAvailable to false based on having expiration date
+            if (!result.hasOwnProperty('isAvailable')) {
+              result['isAvailable'] = false;
+            }
+            result[key] = value;
           } else if (key === 'domainName') {
             result[key] = value.toLowerCase();
           } else {
@@ -78,13 +131,11 @@ var parseRawData = function(rawData, domain) {
       }
     });
 	});
-	if (result.hasOwnProperty('status') && result.status.length >= 1) {
-	  result['isAvailable'] = false;
-	} else {
-	  result['isAvailable'] = true;
+	//console.log('result ' + JSON.stringify(result));
+	if (!result.hasOwnProperty('isAvailable')) {
+	  throw new Error('Bad WHOIS Data: "' + rawData + '"');
 	}
-// 	console.log(rawData);
-// 	console.log(result);
+  //console.log(rawData);
 	return result;
 };
 

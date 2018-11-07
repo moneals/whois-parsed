@@ -14,9 +14,7 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
 
 async function testNotAvailable (base, tld, options = {}) {
   var result = await whoisParser(base + tld);
-  if (tld === '.au') {
-    console.log (result);
-  }
+  // console.log (result);
   expect(result['domainName']).to.equal(base + tld);
   expect(result['isAvailable']).to.equal(false);
   if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('expirationDate'))) {
@@ -28,12 +26,15 @@ async function testNotAvailable (base, tld, options = {}) {
   if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('updatedDate'))) {
     assert.afterDate(new Date(), new Date(result['updatedDate']));
   }
-  expect(result['status'].length).to.be.above(0);
+  if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('status'))) {
+    expect(result['status'].length).to.be.above(0);
+  }
 }
 
 async function testAvailable (tld) {
   var rString = randomString(32);
   var result = await whoisParser(rString + tld);
+  //console.log(result);
   expect(result['domainName']).to.equal(rString + tld);
   expect(result['isAvailable']).to.equal(true);
   expect(result.hasOwnProperty('creationDate')).to.be.false;
@@ -97,5 +98,12 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .us domain should be available', async function() {
       await testAvailable('.us');
+    });
+    
+    it('known .uk should not be available and have data', async function () {
+      await testNotAvailable('google.co', '.uk', { excludedFields: ['status']});
+    });
+    it('random .uk domain should be available', async function() {
+      await testAvailable('.co.uk');
     });
 });

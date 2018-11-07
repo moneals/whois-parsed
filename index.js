@@ -5,8 +5,11 @@ var util = require('util'),
 var lookup = util.promisify(whois.lookup);
 
 module.exports = async function(domain, options){
+  //console.log('looking up whois for ' + domain);
   var rawData = await lookup(domain, options || {});
-  //console.log(domain + ' rawData:\n' + rawData);
+  // console.log(rawData);
+  // TODO check for econnrest or bad whois data then try against stored data.
+  // TODO else store new static whois data for that tld
 	
 	var result = {};
 
