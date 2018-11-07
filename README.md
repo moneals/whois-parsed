@@ -58,7 +58,7 @@ false if the domain name is currently registered.
 Always populated.
 ### status
 Array of status codes for the domain.
-Always populated.
+Not populated for some TLDs.
 ### creationDate
 Date the domain was first registered for this particular registration. This date is reset when a domain expires but not when a domain registration is renewed.
 Not populated for some TLDs.
