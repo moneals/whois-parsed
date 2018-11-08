@@ -6,7 +6,7 @@ const sleep = require('util').promisify(setTimeout);
 var whoisParser = require('../index');
 
 //TODO Add unit tests that use stored whois responses when hit connection reset or rate limit error
-//TODO add dayfirst = True logic from pywhois
+//TODO Add tests for registrar field
 
 function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
   var result = '';
@@ -32,6 +32,10 @@ async function testNotAvailable (base, tld, options = {}) {
   if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('status'))) {
     expect(result['status'].length).to.be.above(0);
   }
+  if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('registrar'))) {
+    expect(result.hasOwnProperty('registrar')).to.be.true;
+  }
+  expect(result.hasOwnProperty('dateFormat')).to.be.false;
 }
 
 async function testAvailable (tld) {
@@ -45,6 +49,8 @@ async function testAvailable (tld) {
   expect(result.hasOwnProperty('updatedDate')).to.be.false;
   expect(result.hasOwnProperty('expirationDate')).to.be.false;
   expect(result.hasOwnProperty('status')).to.be.false;
+  expect(result.hasOwnProperty('registrar')).to.be.false;
+  expect(result.hasOwnProperty('dateFormat')).to.be.false;
 }
     
 describe('#whoisParser integration tests', function() {
@@ -135,9 +141,16 @@ describe('#whoisParser integration tests', function() {
     });
     
     it('known .jp should not be available and have data', async function () {
-      await testNotAvailable('google', '.jp');
+      await testNotAvailable('google', '.jp', {excludedFields: ['registrar']});
     });
     it('random .jp domain should be available', async function() {
       await testAvailable('.jp');
+    });
+    
+    it('known .pl should not be available and have data', async function () {
+      await testNotAvailable('google', '.pl', {excludedFields: ['status']});
+    });
+    it('random .pl domain should be available', async function() {
+      await testAvailable('.pl');
     });
 });
