@@ -133,4 +133,11 @@ describe('#whoisParser integration tests', function() {
     it('random .fi domain should be available', async function() {
       await testAvailable('.fi');
     });
+    
+    it('known .jp should not be available and have data', async function () {
+      await testNotAvailable('google', '.jp');
+    });
+    it('random .jp domain should be available', async function() {
+      await testAvailable('.jp');
+    });
 });

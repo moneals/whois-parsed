@@ -96,6 +96,16 @@ var fiRegex = {
     'dateFormat':                     'DD.MM.YYYY HH:MM:SS'
 };
 
+var jpRegex = {
+    'domainName': '\\[Domain Name\\]\\s*(.+)',
+    'creationDate': '\\[Created on\\]\\s*(.+)',
+    'updatedDate':  '\\[Last Updated\\]\\s?(.+)',
+    'expirationDate':  '\\[Expires on\\]\\s?(.+)',
+    'status': '\\[Status\\]\\s*(.+)',
+    'notFound': '^No match',
+    'dateFormat': 'YYYY/MM/DD'
+};
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
@@ -124,6 +134,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = nlRegex;
   } else if (domain.endsWith('.fi')) {
     domainRegex = fiRegex;
+  } else if (domain.endsWith('.jp')) {
+    domainRegex = jpRegex;
   } else {
     throw new Error('TLD not supported');
   }
