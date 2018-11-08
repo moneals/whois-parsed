@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 var defaultRegex = {
   'domainName':          'Domain Name: *(.+)',
   'registrar':            'Registrar: *(.+)',
@@ -63,8 +65,20 @@ var ukRegex = {
     'creationDate':                  'Registered on:\\s*(.+)',
     'expirationDate':                'Expiry date:\\s*(.+)',
     'updatedDate':                   'Last updated:\\s*(.+)',
-    'notFound':                       'No match for '
+    'notFound':                       'No match for ',
+    'dateFormat':                     'DD-MMM-YYYY'
 };
+
+var frRegex = {
+    'domainName': 'domain: *(.+)',
+    'registrar': 'registrar: *(.+)',
+    'creationDate': 'created: *(.+)',
+    'expirationDate': 'Expir\\w+ Date:\\s?(.+)',
+    'status': 'status: *(.+)',
+    'updatedDate': 'last-update: *(.+)',
+    'notFound': 'No entries found in ',
+    'dateFormat': 'DD/MM/YYYY'
+}
 
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
@@ -88,6 +102,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = usRegex;
   } else if (domain.endsWith('.uk')) {
     domainRegex = ukRegex;
+  } else if (domain.endsWith('.fr')) {
+    domainRegex = frRegex;
   } else {
     throw new Error('TLD not supported');
   }
@@ -121,7 +137,23 @@ var parseRawData = function(rawData, domain) {
             if (!result.hasOwnProperty('isAvailable')) {
               result['isAvailable'] = false;
             }
-            result[key] = value;
+            if (domainRegex.hasOwnProperty('dateFormat')) {
+              result[key] = moment(value, domainRegex.dateFormat).toJSON();
+            } else {
+              result[key] = moment(value).toJSON();
+            }
+          } else if (key === 'creationDate') {
+            if (domainRegex.hasOwnProperty('dateFormat')) {
+              result[key] = moment(value, domainRegex.dateFormat).toJSON();
+            } else {
+              result[key] = moment(value).toJSON();
+            }  
+          } else if (key === 'updatedDate') {
+            if (domainRegex.hasOwnProperty('dateFormat')) {
+              result[key] = moment(value, domainRegex.dateFormat).toJSON();
+            } else {
+              result[key] = moment(value).toJSON();
+            }  
           } else if (key === 'domainName') {
             result[key] = value.toLowerCase();
           } else {
@@ -131,11 +163,11 @@ var parseRawData = function(rawData, domain) {
       }
     });
 	});
-	//console.log('result ' + JSON.stringify(result));
+	// console.log('result ' + JSON.stringify(result));
 	if (!result.hasOwnProperty('isAvailable')) {
 	  throw new Error('Bad WHOIS Data: "' + rawData + '"');
 	}
-  //console.log(rawData);
+  // console.log(rawData);
 	return result;
 };
 

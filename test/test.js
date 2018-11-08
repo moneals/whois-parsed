@@ -5,6 +5,7 @@ const assert = chai.assert;
 var whoisParser = require('../index');
 
 //TODO Add unit tests that use stored whois responses when hit connection reset or rate limit error
+//TODO add dayfirst = True logic from pywhois
 
 function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
   var result = '';
@@ -105,5 +106,12 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .uk domain should be available', async function() {
       await testAvailable('.co.uk');
+    });
+    
+    it('known .fr should not be available and have data', async function () {
+      await testNotAvailable('google', '.fr');
+    });
+    it('random .fr domain should be available', async function() {
+      await testAvailable('.fr');
     });
 });

@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "html-entities": "^1.2.1",
+    "moment": "^2.22.2",
     "whois": "^2.7.0"
   }
 }
