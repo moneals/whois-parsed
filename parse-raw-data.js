@@ -80,6 +80,12 @@ var frRegex = {
     'dateFormat': 'DD/MM/YYYY'
 }
 
+var nlRegex = {
+    'domainName': 'Domain Name: *(.+)',
+    'status': 'Status: *(.+)',
+    'notFound': '\\.nl is free'
+};
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
@@ -104,6 +110,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = ukRegex;
   } else if (domain.endsWith('.fr')) {
     domainRegex = frRegex;
+  } else if (domain.endsWith('.nl')) {
+    domainRegex = nlRegex;
   } else {
     throw new Error('TLD not supported');
   }

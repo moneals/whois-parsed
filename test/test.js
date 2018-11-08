@@ -2,6 +2,7 @@ const chai = require('chai');
 const expect = chai.expect;
 chai.use(require('chai-datetime'));
 const assert = chai.assert;
+const sleep = require('util').promisify(setTimeout);
 var whoisParser = require('../index');
 
 //TODO Add unit tests that use stored whois responses when hit connection reset or rate limit error
@@ -14,6 +15,7 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
 }
 
 async function testNotAvailable (base, tld, options = {}) {
+  await sleep(3000);
   var result = await whoisParser(base + tld);
   // console.log (result);
   expect(result['domainName']).to.equal(base + tld);
@@ -33,6 +35,7 @@ async function testNotAvailable (base, tld, options = {}) {
 }
 
 async function testAvailable (tld) {
+  await sleep(3000);
   var rString = randomString(32);
   var result = await whoisParser(rString + tld);
   //console.log(result);
@@ -42,9 +45,10 @@ async function testAvailable (tld) {
   expect(result.hasOwnProperty('updatedDate')).to.be.false;
   expect(result.hasOwnProperty('expirationDate')).to.be.false;
   expect(result.hasOwnProperty('status')).to.be.false;
-};
+}
     
 describe('#whoisParser integration tests', function() {
+    this.timeout(10000);
     it('known .com should not be available and have data', async function () {
       await testNotAvailable('google', '.com');
     });
@@ -67,7 +71,7 @@ describe('#whoisParser integration tests', function() {
     });
     
     it('known .name should not be available and have data', async function () {
-      await testNotAvailable('google', '.name', { excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
+      await testNotAvailable('google', '.name', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
     });
     it('random .name domain should be available', async function() {
       await testAvailable('.name');
@@ -80,8 +84,9 @@ describe('#whoisParser integration tests', function() {
       await testAvailable('.me');
     });
     
+    // updatedDate is sometimes populated for .au domains, but not always.
     it('known .au should not be available and have data', async function () {
-      await testNotAvailable('google.com', '.au', { excludedFields: ['creationDate', 'expirationDate']});
+      await testNotAvailable('google.com', '.au', { excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
     });
     it('random .au domain should be available', async function() {
       await testAvailable('.com.au');
@@ -113,5 +118,12 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .fr domain should be available', async function() {
       await testAvailable('.fr');
+    });
+    
+    it('known .nl should not be available and have data', async function () {
+      await testNotAvailable('google', '.nl', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
+    });
+    it('random .nl domain should be available', async function() {
+      await testAvailable('.nl');
     });
 });
