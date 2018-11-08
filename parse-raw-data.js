@@ -86,6 +86,16 @@ var nlRegex = {
     'notFound': '\\.nl is free'
 };
 
+var fiRegex = {
+    'domainName':                    'domain\\.*: *([\\S]+)',
+    'status':                         'status\\.*: *([\\S]+)',
+    'creationDate':                  'created\\.*: *([\\S]+)',
+    'updatedDate':                   'modified\\.*: *([\\S]+)',
+    'expirationDate':                'expires\\.*: *([\\S]+)',
+    'notFound':                       'Domain not found',
+    'dateFormat':                     'DD.MM.YYYY HH:MM:SS'
+};
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
@@ -112,6 +122,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = frRegex;
   } else if (domain.endsWith('.nl')) {
     domainRegex = nlRegex;
+  } else if (domain.endsWith('.fi')) {
+    domainRegex = fiRegex;
   } else {
     throw new Error('TLD not supported');
   }
