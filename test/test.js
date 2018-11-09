@@ -167,4 +167,11 @@ describe('#whoisParser integration tests', function() {
     it('random .eu domain should be available', async function() {
       await testAvailable('.eu');
     });
+    
+    it('known .ee should not be available and have data', async function () {
+      await testNotAvailable('google', '.ee');
+    });
+    it('random .ee domain should be available', async function() {
+      await testAvailable('.ee');
+    });
 });

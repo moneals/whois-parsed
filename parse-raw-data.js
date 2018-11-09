@@ -135,6 +135,18 @@ var euRegex = {
     'notFound': 'Status: AVAILABLE'
 };
 
+var eeRegex = {
+    'domainName': 'Domain: *[\\n\\r]+\s*name: *([^\\n\\r]+)',
+    'status': 'Domain: *[\\n\\r]+\\s*name: *[^\\n\\r]+\\sstatus: *([^\\n\\r]+)',
+    'creationDate': 'Domain: *[\\n\\r]+\\s*name: *[^\\n\\r]+\\sstatus: *[^\\n\\r]+\\sregistered: *([^\\n\\r]+)',
+    'updatedDate': 'Domain: *[\\n\\r]+\\s*name: *[^\\n\\r]+\\sstatus: *[^\\n\\r]+\\sregistered: *[^\\n\\r]+\\schanged: *([^\\n\\r]+)',
+    'expirationDate': 'Domain: *[\\n\\r]+\\s*name: *[^\\n\\r]+\\sstatus: *[^\\n\\r]+\\sregistered: *[^\\n\\r]+\\schanged: *[^\\n\\r]+\\sexpire: *([^\\n\\r]+)',
+    'registrar': 'Registrar: *[\\n\\r]+\\s*name: *([^\\n\\r]+)',
+    'notFound': 'Domain not found',
+    'dateFormat': 'YYYY-MM-DD'
+};
+
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
@@ -170,6 +182,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = brRegex;
   } else if (domain.endsWith('.eu')) {
     domainRegex = euRegex;
+  } else if (domain.endsWith('.ee')) {
+    domainRegex = eeRegex;
   } else {
     throw new Error('TLD not supported');
   }
