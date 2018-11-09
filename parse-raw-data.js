@@ -119,6 +119,22 @@ var plRegex = {
     'dateFormat':                     'YYYY.MM.DD hh:mm:ss'
 };
 
+var brRegex = {
+    'domainName':                        'domain: *(.+)\n',
+    'status':                        'status: *(.+)',
+    'creationDate':                        'created: *(.+)',
+    'expirationDate':                        'expires: *(.+)',
+    'updatedDate':                        'changed: *(.+)',
+    'dateFormat':                     'YYYYMMDD',
+    'notFound':                       'No match for '
+};
+
+var euRegex = {
+    'domainName': 'Domain: *([^\\n\\r]+)',
+    'registrar': 'Registrar: *\\n *Name: *([^\\n\\r]+)',
+    'notFound': 'Status: AVAILABLE'
+};
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
@@ -150,6 +166,10 @@ var parseRawData = function(rawData, domain) {
     domainRegex = jpRegex;
   } else if (domain.endsWith('.pl')) {
     domainRegex = plRegex;
+  } else if (domain.endsWith('.br')) {
+    domainRegex = brRegex;
+  } else if (domain.endsWith('.eu')) {
+    domainRegex = euRegex;
   } else {
     throw new Error('TLD not supported');
   }
@@ -210,7 +230,12 @@ var parseRawData = function(rawData, domain) {
   // console.log(rawData);
 	// console.log('result ' + JSON.stringify(result));
 	if (!result.hasOwnProperty('isAvailable')) {
-	  throw new Error('Bad WHOIS Data: "' + rawData + '"');
+	  // .eu tld has very little information
+	  if (domain.endsWith('.eu') && result.hasOwnProperty('registrar')) {
+	    result.isAvailable = false; 
+	  } else {
+	    throw new Error('Bad WHOIS Data: "' + rawData + '"');
+	  }
 	}
   return result;
 };

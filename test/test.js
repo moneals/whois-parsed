@@ -40,7 +40,7 @@ async function testNotAvailable (base, tld, options = {}) {
 
 async function testAvailable (tld) {
   await sleep(3000);
-  var rString = randomString(32);
+  var rString = randomString(32).toLowerCase();
   var result = await whoisParser(rString + tld);
   //console.log(result);
   expect(result['domainName']).to.equal(rString + tld);
@@ -152,5 +152,19 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .pl domain should be available', async function() {
       await testAvailable('.pl');
+    });
+    
+    it('known .br should not be available and have data', async function () {
+      await testNotAvailable('google.com', '.br', {excludedFields: ['registrar']});
+    });
+    it('random .br domain should be available', async function() {
+      await testAvailable('.com.br');
+    });
+    
+    it('known .eu should not be available and have data', async function () {
+      await testNotAvailable('google', '.eu', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate', 'status']});
+    });
+    it('random .eu domain should be available', async function() {
+      await testAvailable('.eu');
     });
 });
