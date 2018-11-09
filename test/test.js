@@ -174,4 +174,11 @@ describe('#whoisParser integration tests', function() {
     it('random .ee domain should be available', async function() {
       await testAvailable('.ee');
     });
+    
+    it('known .kr should not be available and have data', async function () {
+      await testNotAvailable('google', '.kr', {excludedFields: ['status']});
+    });
+    it('random .kr domain should be available', async function() {
+      await testAvailable('.kr');
+    });
 });

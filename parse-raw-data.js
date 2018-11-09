@@ -146,6 +146,16 @@ var eeRegex = {
     'dateFormat': 'YYYY-MM-DD'
 };
 
+var krRegex = {
+    'domainName': 'Domain Name\\s*: *(.+)',
+    'creationDate': 'Registered Date\\s*: *(.+)',
+    'updatedDate':  'Last updated Date\\s*: *(.+)',
+    'expirationDate':  'Expiration Date\\s*: *(.+)',
+    'registrar':  'Authorized Agency\\s*: *(.+)',
+    'dateFormat': 'YYYY. MM. DD.',
+    'notFound': 'The requested domain was not found '
+};
+
 
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
@@ -184,6 +194,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = euRegex;
   } else if (domain.endsWith('.ee')) {
     domainRegex = eeRegex;
+  } else if (domain.endsWith('.kr')) {
+    domainRegex = krRegex;
   } else {
     throw new Error('TLD not supported');
   }
