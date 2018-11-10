@@ -228,4 +228,24 @@ describe('#whoisParser integration tests', function() {
       await testAvailable('.рф');
     });
     
+    it('known .info should not be available and have data', async function () {
+      await testNotAvailable('google', '.info');
+    });
+    it('random .info domain should be available', async function() {
+      await testAvailable('.info');
+    });
+    
+    it('known .su should not be available and have data', async function () {
+      await testNotAvailable('google', '.su', {excludedFields: ['updatedDate']});
+    });
+    it('random .su domain should be available', async function() {
+      await testAvailable('.su');
+    });
+    
+    it('known .kg should not be available and have data', async function () {
+      await testNotAvailable('google', '.kg', {excludedFields: ['status']});
+    });
+    it('random .kg domain should be available', async function() {
+      await testAvailable('.kg');
+    });
 });
