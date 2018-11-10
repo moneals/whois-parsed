@@ -190,8 +190,17 @@ var caRegex = {
     'dateFormat':                     'YYYY/MM/DD'
 };
 
+var beRegex = {
+    'domainName': 'Domain:\\s*(.+)',
+    'registrar':                      'Registrar: *[\\n\\r]+\\s*Name:\\s*(.+)',
+    'status':   'Status:\\s*(.+)',
+    'creationDate':   'Registered: *(.+)',
+    'dateFormat':   'ddd MMM DD YYYY',
+    'notFound': 'Status:\\s*AVAILABLE'
+};
+
 var parseRawData = function(rawData, domain) {
-	if (rawData == null) {
+	if (rawData === null) {
 	  throw new Error('No Whois data received');
 	} else if (rawData.length <= 10) {
     throw new Error('Bad WHOIS Data: "' + rawData + '"');
@@ -240,6 +249,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = atRegex;
   } else if (domain.endsWith('.ca')) {
     domainRegex = caRegex;
+  } else if (domain.endsWith('.be')) {
+    domainRegex = beRegex;
   } else {
     throw new Error('TLD not supported');
   }
@@ -291,7 +302,7 @@ var parseRawData = function(rawData, domain) {
 	if (!result.hasOwnProperty('isAvailable')) {
 	  result.isAvailable = false; 
 	}
-// 	console.log(rawData);
+// 	console.log('rawData: "' + rawData + '"');
 // 	console.log('result ' + JSON.stringify(result));
   return result;
 };

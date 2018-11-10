@@ -209,4 +209,11 @@ describe('#whoisParser integration tests', function() {
       await testAvailable('.ca');
     });
     
+    it('known .be should not be available and have data', async function () {
+      await testNotAvailable('google', '.be', {excludedFields: ['updatedDate', 'expirationDate']});
+    });
+    it('random .be domain should be available', async function() {
+      await testAvailable('.be');
+    });
+    
 });
