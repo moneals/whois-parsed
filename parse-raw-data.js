@@ -157,15 +157,26 @@ var krRegex = {
 };
 
 var bgRegex = {
-    'domainName': 'DOMAIN NAME: *(.+)\n',
+    'domainName': 'DOMAIN NAME: *(.+)\\n',
     'status': 'registration status: s*(.+)',
-    'notFound': ' does not exist in database'
+    'notFound': ' does not exist in database',
+    'rateLimited': 'Query limit exceeded'
+};
+
+var deRegex = {
+    'domainName': 'Domain: *(.+)',
+    'status': 'Status: *(.+)',
+    'updatedDate': 'Changed: *(.+)',
+    'notFound': 'Status: *free'
 };
 
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
-	}
+	} else if (rawData.length <= 10) {
+    throw new Error('Bad WHOIS Data: "' + rawData + '"');
+  }
+	
 	var result = {domainName: domain };	
 	
 	var domainRegex = '';
@@ -203,6 +214,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = krRegex;
   } else if (domain.endsWith('.bg')) {
     domainRegex = bgRegex;
+  } else if (domain.endsWith('.de')) {
+    domainRegex = deRegex;
   } else {
     throw new Error('TLD not supported');
   }
@@ -213,7 +226,6 @@ var parseRawData = function(rawData, domain) {
       if (key === 'rateLimited') {
         throw new Error('Rate Limited');
       } else if (key === 'notFound') {
-        // check if value set first to avoid false positives from quirky WHOIS data
         if (!result.hasOwnProperty('isAvailable')) {
             result['isAvailable'] = true;
         }
@@ -221,20 +233,12 @@ var parseRawData = function(rawData, domain) {
         //var value = line.match(regex)[line.match(regex).length-1];
         var value = rawData.match(regex)[rawData.match(regex).length-1];
         if (key === 'status') {
-          // Set isAvailable to false based on a status being found
-          if (!result.hasOwnProperty('isAvailable')) {
-            result['isAvailable'] = false;
-          }
           if (result[key]) {
             result[key].push(value);
           } else {
             result[key] = [value];
           }
         } else if (key === 'expirationDate') {
-          // Set isAvailable to false based on having expiration date
-          if (!result.hasOwnProperty('isAvailable')) {
-            result['isAvailable'] = false;
-          }
           if (domainRegex.hasOwnProperty('dateFormat')) {
             result[key] = moment(value, domainRegex.dateFormat).toJSON();
           } else {
@@ -260,16 +264,11 @@ var parseRawData = function(rawData, domain) {
       }
     }
   });
-  // console.log(rawData);
-	// console.log('result ' + JSON.stringify(result));
 	if (!result.hasOwnProperty('isAvailable')) {
-	  // .eu tld has very little information
-	  if (domain.endsWith('.eu') && result.hasOwnProperty('registrar')) {
-	    result.isAvailable = false; 
-	  } else {
-	    throw new Error('Bad WHOIS Data: "' + rawData + '"');
-	  }
+	  result.isAvailable = false; 
 	}
+// 	console.log(rawData);
+// 	console.log('result ' + JSON.stringify(result));
   return result;
 };
 

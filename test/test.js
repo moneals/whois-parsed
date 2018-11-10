@@ -48,7 +48,6 @@ async function testAvailable (tld) {
   expect(result.hasOwnProperty('creationDate')).to.be.false;
   expect(result.hasOwnProperty('updatedDate')).to.be.false;
   expect(result.hasOwnProperty('expirationDate')).to.be.false;
-  expect(result.hasOwnProperty('status')).to.be.false;
   expect(result.hasOwnProperty('registrar')).to.be.false;
   expect(result.hasOwnProperty('dateFormat')).to.be.false;
 }
@@ -187,6 +186,13 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .bg domain should be available', async function() {
       await testAvailable('.bg');
+    });
+    
+    it('known .de should not be available and have data', async function () {
+      await testNotAvailable('google', '.de', {excludedFields: ['creationDate', 'expirationDate', 'registrar']});
+    });
+    it('random .de domain should be available', async function() {
+      await testAvailable('.de');
     });
     
 });
