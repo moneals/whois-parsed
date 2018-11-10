@@ -195,4 +195,18 @@ describe('#whoisParser integration tests', function() {
       await testAvailable('.de');
     });
     
+    it('known .at should not be available and have data', async function () {
+      await testNotAvailable('google', '.at', {excludedFields: ['creationDate', 'expirationDate', 'status']});
+    });
+    it('random .at domain should be available', async function() {
+      await testAvailable('.at');
+    });
+    
+    it('known .ca should not be available and have data', async function () {
+      await testNotAvailable('google', '.ca');
+    });
+    it('random .ca domain should be available', async function() {
+      await testAvailable('.ca');
+    });
+    
 });

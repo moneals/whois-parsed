@@ -84,7 +84,8 @@ var nlRegex = {
     'domainName': 'Domain Name: *(.+)',
     'registrar':  'Registrar: *\\s*(.+)',
     'status': 'Status: *(.+)',
-    'notFound': '\\.nl is free'
+    'notFound': '\\.nl is free',
+    'rateLimited': 'maximum number of requests per second exceeded'
 };
 
 var fiRegex = {
@@ -170,6 +171,25 @@ var deRegex = {
     'notFound': 'Status: *free'
 };
 
+var atRegex = {
+    'domainName': 'domain: *(.+)',
+    'updatedDate': 'changed: *(.+)',
+    'registrar':  'registrar: *(.+)',
+    'notFound': ' nothing found',
+    'dateFormat': 'YYYYMMDD hh:mm:ss'
+};
+
+var caRegex = {
+    'domainName':                    'Domain name: *(.+)',
+    'status':                  'Domain status: *(.+)',
+    'updatedDate':                   'Updated Date: *(.+)',
+    'creationDate':                  'Creation Date: *(.+)',
+    'expirationDate':                'Expiry Date: *(.+)',
+    'registrar':                      'Registrar: *[\\n\\r]+\\s*Name: *(.+)',
+    'notFound':                       'Domain status: *available',
+    'dateFormat':                     'YYYY/MM/DD'
+};
+
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
 	  throw new Error('No Whois data received');
@@ -216,6 +236,10 @@ var parseRawData = function(rawData, domain) {
     domainRegex = bgRegex;
   } else if (domain.endsWith('.de')) {
     domainRegex = deRegex;
+  } else if (domain.endsWith('.at')) {
+    domainRegex = atRegex;
+  } else if (domain.endsWith('.ca')) {
+    domainRegex = caRegex;
   } else {
     throw new Error('TLD not supported');
   }
