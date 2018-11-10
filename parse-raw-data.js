@@ -156,6 +156,11 @@ var krRegex = {
     'notFound': 'The requested domain was not found '
 };
 
+var bgRegex = {
+    'domainName': 'DOMAIN NAME: *(.+)\n',
+    'status': 'registration status: s*(.+)',
+    'notFound': ' does not exist in database'
+};
 
 var parseRawData = function(rawData, domain) {
 	if (rawData == null) {
@@ -196,6 +201,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = eeRegex;
   } else if (domain.endsWith('.kr')) {
     domainRegex = krRegex;
+  } else if (domain.endsWith('.bg')) {
+    domainRegex = bgRegex;
   } else {
     throw new Error('TLD not supported');
   }

@@ -181,4 +181,12 @@ describe('#whoisParser integration tests', function() {
     it('random .kr domain should be available', async function() {
       await testAvailable('.kr');
     });
+    
+    it('known .bg should not be available and have data', async function () {
+      await testNotAvailable('google', '.bg', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate', 'registrar']});
+    });
+    it('random .bg domain should be available', async function() {
+      await testAvailable('.bg');
+    });
+    
 });
