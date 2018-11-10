@@ -49,7 +49,7 @@ var usRegex = {
   'notFound':                      '^No Data Found'
 };
 
-var ruRegex = {
+var ruRegex = { // and .рф
     'domainName': 'domain: *(.+)',
     'registrar': 'registrar: *(.+)',
     'creationDate': 'created: *(.+)',
@@ -251,6 +251,8 @@ var parseRawData = function(rawData, domain) {
     domainRegex = caRegex;
   } else if (domain.endsWith('.be')) {
     domainRegex = beRegex;
+  } else if (domain.endsWith('.рф')) {
+    domainRegex = ruRegex;
   } else {
     throw new Error('TLD not supported');
   }

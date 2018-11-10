@@ -4,6 +4,7 @@ chai.use(require('chai-datetime'));
 const assert = chai.assert;
 const sleep = require('util').promisify(setTimeout);
 var whoisParser = require('../index');
+const punycode = require('punycode');
 
 //TODO Add unit tests that use stored whois responses when hit connection reset or rate limit error
 //TODO Add tests for registrar field
@@ -18,7 +19,11 @@ async function testNotAvailable (base, tld, options = {}) {
   await sleep(3000);
   var result = await whoisParser(base + tld);
   // console.log (result);
-  expect(result['domainName']).to.equal(base + tld);
+  if (tld === '.рф') { // this gets translated to puny code
+    expect(punycode.toUnicode(result['domainName'])).to.equal(base + tld); 
+  } else {
+    expect(result['domainName']).to.equal(base + tld);
+  }
   expect(result['isAvailable']).to.equal(false);
   if (!(options.hasOwnProperty('excludedFields') && options.excludedFields.includes('expirationDate'))) {
     assert.beforeDate(new Date(), new Date(result['expirationDate']));
@@ -98,7 +103,7 @@ describe('#whoisParser integration tests', function() {
     });
     
     it('known .ru should not be available and have data', async function () {
-      await testNotAvailable('google', '.ru', { excludedFields: ['updatedDate']});
+      await testNotAvailable('google', '.ru', {excludedFields: ['updatedDate']});
     });
     it('random .ru domain should be available', async function() {
       await testAvailable('.ru');
@@ -214,6 +219,13 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .be domain should be available', async function() {
       await testAvailable('.be');
+    });
+    
+    it('known .рф should not be available and have data', async function () {
+      await testNotAvailable('президент', '.рф', {excludedFields: ['updatedDate']});
+    });
+    it('random .рф domain should be available', async function() {
+      await testAvailable('.рф');
     });
     
 });
