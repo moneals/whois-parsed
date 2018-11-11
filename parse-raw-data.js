@@ -6,7 +6,7 @@ var defaultRegex = {
   'updatedDate':         'Updated Date: *(.+)',
   'creationDate':        'Creation Date: *(.+)',
   'expirationDate':      'Expir\\w+ Date: *(.+)',
-  'status':               'Status: *(.+)',
+  'status':               'Status:\\s*(.+)\\s*\\n',
   'notFound':             'No match for '
 };
 
@@ -140,7 +140,7 @@ var eeRegex = {
 var krRegex = {
     'domainName': 'Domain Name\\s*: *(.+)',
     'creationDate': 'Registered Date\\s*: *(.+)',
-    'updatedDate':  'Last updated Date\\s*: *(.+)',
+    'updatedDate':  'Last Updated Date\\s*: *(.+)',
     'expirationDate':  'Expiration Date\\s*: *(.+)',
     'registrar':  'Authorized Agency\\s*: *(.+)',
     'dateFormat': 'YYYY. MM. DD.',
@@ -173,9 +173,9 @@ var atRegex = {
 var caRegex = {
     'domainName':                    'Domain name: *(.+)',
     'status':                  'Domain status: *(.+)',
-    'updatedDate':                   'Updated Date: *(.+)',
-    'creationDate':                  'Creation Date: *(.+)',
-    'expirationDate':                'Expiry Date: *(.+)',
+    'updatedDate':                   'Updated date: *(.+)',
+    'creationDate':                  'Creation date: *(.+)',
+    'expirationDate':                'Expiry date: *(.+)',
     'registrar':                      'Registrar: *[\\n\\r]+\\s*Name: *(.+)',
     'notFound':                       'Domain status: *available',
     'dateFormat':                     'YYYY/MM/DD'
@@ -330,7 +330,12 @@ var parseRawData = function(rawData, domain) {
   }
 	
 	Object.keys(domainRegex).forEach(function(key) {
-    var regex = new RegExp(domainRegex[key], 'i');
+	  // Find multiple matches for status field
+	  if (key === 'status') {
+      var regex = new RegExp(domainRegex[key], 'g');
+	  } else {
+	    var regex = new RegExp(domainRegex[key]);
+	  }
     if (rawData.match(regex) && key !== 'dateFormat') { // dateformat not used for line matching
       if (key === 'rateLimited') {
         throw new Error('Rate Limited');
@@ -377,8 +382,8 @@ var parseRawData = function(rawData, domain) {
 	if (!result.hasOwnProperty('isAvailable')) {
 	  result.isAvailable = false; 
 	}
-// 	console.log('rawData: "' + rawData + '"');
-// 	console.log('result ' + JSON.stringify(result));
+  // console.log('rawData: "' + rawData + '"');
+  // console.log('result ' + JSON.stringify(result));
   return result;
 };
 

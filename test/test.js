@@ -306,7 +306,7 @@ describe('#whoisParser integration tests', function() {
       assert.beforeDate(new Date(), new Date(result['expirationDate']));
       assert.afterDate(new Date(), new Date(result['creationDate']));
       assert.afterDate(new Date(), new Date(result['updatedDate']));
-      expect(result['status'].length).to.be.above(1);
+      expect(result['status'].length).to.be.above(2);
       expect(result.hasOwnProperty('registrar')).to.be.true;
       expect(result.hasOwnProperty('dateFormat')).to.be.false;
     });
