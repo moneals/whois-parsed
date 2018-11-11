@@ -211,6 +211,56 @@ var kgRegex = {
     'notFound':                       'domain is available for registration'
 };
 
+// var chRegex = {
+//     'domainName':                      '\\nDomain name:\\n*(.+)',
+//     'registrar':                        'Registrar:\n*(.+)',
+//     'creationDate':                    'First registration date:\\n*(.+)',
+//     'rateLimited':                      'Please wait a moment and try again.',
+//     'notFound':                         'We do not have an entry in our database matching your query',
+//     'dateFormat':                       'YYYY-MM-DD'
+// };
+
+var idRegex = {
+    'domainName':                 'Domain Name:(.+)',
+    'creationDate':               'Created On:(.+)',
+    'expirationDate':             'Expiration Date(.+)',
+    'updatedDate':                'Last Updated On(.+)',
+    'registrar':                   'Sponsoring Registrar Organization:(.+)',
+    'status':                      'Status:(.+)',
+    'notFound':                   'DOMAIN NOT FOUND',
+    'dateFormat':                 'DD-MMM-YYYY HH:mm:ss UTC'
+};
+
+var skRegex = {
+    'domainName':                  'Domain:\\s*(.+)',
+    'creationDate':                 'Created:\\s*(.+)',
+    'expirationDate':              'Valid Until:\\s*(.+)',
+    'status':                       'EPP Status:\\s*(.+)',
+    'updatedDate':                 'Updated:\\s*(.+)',
+    'registrar':                  'Registrar:\\s*(.+)',
+    'dateFormat':                 'YYYY-MM-DD',
+    'notFound':                   'Domain not found'
+};
+
+var seRegex = {
+    'domainName':                    'domain\\.*: *(.+)',
+    'creationDate':                  'created\\.*: *(.+)',
+    'updatedDate':                   'modified\\.*: *(.+)',
+    'expirationDate':                'expires\\.*: *(.+)',
+    'status':                         'status\\.*: *(.+)',
+    'registrar':                      'registrar: *(.+)',
+    'dateFormat':                     'YYYY-MM-DD',
+    'notFound':                       '\\" not found.'
+};
+
+var isRegex = {
+    'domainName':      'domain\\.*: *(.+)',
+    'creationDate':    'created\\.*: *(.+)',
+    'expirationDate':  'expires\\.*: *(.+)',
+    'dateFormat':       'MMM DD YYYY',
+    'notFound':         'No entries found for query'
+};
+
 var parseRawData = function(rawData, domain) {
 	if (rawData === null) {
 	  throw new Error('No Whois data received');
@@ -265,6 +315,16 @@ var parseRawData = function(rawData, domain) {
     domainRegex = kgRegex;
   } else if (domain.endsWith('.info')) {
     domainRegex = infoRegex;
+  // } else if (domain.endsWith('.ch') || domain.endsWith('.li')) {
+  //   domainRegex = infoRegex;
+  } else if (domain.endsWith('.id')) {
+    domainRegex = idRegex;
+  } else if (domain.endsWith('.sk')) {
+    domainRegex = skRegex;
+  } else if (domain.endsWith('.se')) {
+    domainRegex = seRegex;
+  } else if (domain.endsWith('.is')) {
+    domainRegex = isRegex;
   } else {
     throw new Error('TLD not supported');
   }

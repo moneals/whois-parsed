@@ -249,13 +249,6 @@ describe('#whoisParser integration tests', function() {
       await testAvailable('.kg');
     });
     
-    it('known .kg should not be available and have data', async function () {
-      await testNotAvailable('google', '.kg', {excludedFields: ['status']});
-    });
-    it('random .kg domain should be available', async function() {
-      await testAvailable('.kg');
-    });
-    
     it('known .biz should not be available and have data', async function () {
       await testNotAvailable('google', '.biz');
     });
@@ -268,5 +261,33 @@ describe('#whoisParser integration tests', function() {
     });
     it('random .mobi domain should be available', async function() {
       await testAvailable('.mobi');
+    });
+    
+    it('known .id should not be available and have data', async function () {
+      await testNotAvailable('google', '.id');
+    });
+    it('random .id domain should be available', async function() {
+      await testAvailable('.id');
+    });
+    
+    it('known .sk should not be available and have data', async function () {
+      await testNotAvailable('google', '.sk');
+    });
+    it('random .sk domain should be available', async function() {
+      await testAvailable('.sk');
+    });
+    
+    it('known .se should not be available and have data', async function () {
+      await testNotAvailable('google', '.se');
+    });
+    it('random .se domain should be available', async function() {
+      await testAvailable('.se');
+    });
+    
+    it('known .is should not be available and have data', async function () {
+      await testNotAvailable('google', '.is', {excludedFields: ['updatedDate', 'status', 'registrar']});
+    });
+    it('random .is domain should be available', async function() {
+      await testAvailable('.is');
     });
 });
