@@ -25,7 +25,7 @@ var whoisOptions = {
 (async function(){
   const whois = require('whois-parsed');
 
-  var results = await whois('google.com', whoisOptions);
+  var results = await whois.lookup('google.com', whoisOptions);
   console.log(JSON.stringify(results, null, 2));
 })()
 
