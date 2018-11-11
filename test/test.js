@@ -284,6 +284,13 @@ describe('#whoisParser integration tests', function() {
       await testAvailable('.se');
     });
     
+    it('known .nu should not be available and have data', async function () {
+      await testNotAvailable('google', '.nu');
+    });
+    it('random .se domain should be available', async function() {
+      await testAvailable('.se');
+    });
+    
     it('known .is should not be available and have data', async function () {
       await testNotAvailable('google', '.is', {excludedFields: ['updatedDate', 'status', 'registrar']});
     });

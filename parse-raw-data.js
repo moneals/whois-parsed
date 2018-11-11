@@ -321,7 +321,7 @@ var parseRawData = function(rawData, domain) {
     domainRegex = idRegex;
   } else if (domain.endsWith('.sk')) {
     domainRegex = skRegex;
-  } else if (domain.endsWith('.se')) {
+  } else if (domain.endsWith('.se') || domain.endsWith('.nu')) {
     domainRegex = seRegex;
   } else if (domain.endsWith('.is')) {
     domainRegex = isRegex;
