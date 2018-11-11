@@ -20,16 +20,6 @@ var orgRegex = {
   'notFound':             '^NOT FOUND'
 };
 
-var meRegex = {
-  'domainName':          'Domain Name: *(.+)',
-  'registrar':            'Registrar: *(.+)',
-  'updatedDate':         'Updated Date: *(.+)',
-  'creationDate':        'Creation Date: *(.+)',
-  'expirationDate':      'Expir\\w+ Date: *(.+)',
-  'status':               'Status: *(.+)',
-  'notFound':             '^NOT FOUND'
-};
-
 var auRegex = {
     'domainName':                    'Domain Name: *(.+)',
     'updatedDate':			      'Last Modified: *(.+)',
@@ -207,8 +197,8 @@ var infoRegex = {
     'creationDate':    'Creation Date: *(.+)',
     'expirationDate':  'Registrar Registration Expiration Date: *(.+)',
     'status':           'Status: *(.+)',
-    'notFound':         'NOT FOUND',
-    'dateFormat':       'YYYY-MM-DDTHH:mm:ssZ'
+    'notFound':         'NOT FOUND'
+    //'dateFormat':       'YYYY-MM-DDTHH:mm:ssZ'
 };
 
 var kgRegex = {
@@ -220,6 +210,16 @@ var kgRegex = {
     'dateFormat':                     'ddd MMM DD HH:mm:ss YYYY',
     'notFound':                       'domain is available for registration'
 };
+
+// var ioRegex = {
+//     'domainName':                    'Domain Name: *(.+)',
+//     'registrar':                      'Registrar: *(.+)',
+//     'status':                         'Domain Status: *(.+)',
+//     'creationDate':                  'Creation Date: *(.+)',
+//     'expirationDate':                'Registry Expir\\w* Date: *(.+)',
+//     'updatedDate':                   'Updated Date: *(.+)',
+//     'notFound':                       'NOT FOUND'
+// };
 
 var parseRawData = function(rawData, domain) {
 	if (rawData === null) {
@@ -233,15 +233,13 @@ var parseRawData = function(rawData, domain) {
 	var domainRegex = '';
   if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.name')) {
     domainRegex = defaultRegex;
-  } else if (domain.endsWith('.org')) {
+  } else if (domain.endsWith('.org') || domain.endsWith('.me')) {
     domainRegex = orgRegex;
-  } else if (domain.endsWith('.me')) {
-    domainRegex = meRegex;
   } else if (domain.endsWith('.au')) {
     domainRegex = auRegex;
   } else if (domain.endsWith('.ru') || domain.endsWith('.рф') || domain.endsWith('.su')) {
     domainRegex = ruRegex;
-  } else if (domain.endsWith('.us')) {
+  } else if (domain.endsWith('.us') || domain.endsWith('.biz')) {
     domainRegex = usRegex;
   } else if (domain.endsWith('.uk')) {
     domainRegex = ukRegex;
@@ -273,10 +271,10 @@ var parseRawData = function(rawData, domain) {
     domainRegex = caRegex;
   } else if (domain.endsWith('.be')) {
     domainRegex = beRegex;
-  } else if (domain.endsWith('.info')) {
-    domainRegex = infoRegex;
   } else if (domain.endsWith('.kg')) {
     domainRegex = kgRegex;
+  } else if (domain.endsWith('.info')) {
+    domainRegex = infoRegex;
   } else {
     throw new Error('TLD not supported');
   }
@@ -328,8 +326,8 @@ var parseRawData = function(rawData, domain) {
 	if (!result.hasOwnProperty('isAvailable')) {
 	  result.isAvailable = false; 
 	}
-	console.log('rawData: "' + rawData + '"');
-	console.log('result ' + JSON.stringify(result));
+// 	console.log('rawData: "' + rawData + '"');
+// 	console.log('result ' + JSON.stringify(result));
   return result;
 };
 

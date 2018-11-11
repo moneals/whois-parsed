@@ -248,4 +248,18 @@ describe('#whoisParser integration tests', function() {
     it('random .kg domain should be available', async function() {
       await testAvailable('.kg');
     });
+    
+    it('known .kg should not be available and have data', async function () {
+      await testNotAvailable('google', '.kg', {excludedFields: ['status']});
+    });
+    it('random .kg domain should be available', async function() {
+      await testAvailable('.kg');
+    });
+    
+    it('known .biz should not be available and have data', async function () {
+      await testNotAvailable('google', '.biz');
+    });
+    it('random .biz domain should be available', async function() {
+      await testAvailable('.biz');
+    });
 });
