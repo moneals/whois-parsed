@@ -262,4 +262,11 @@ describe('#whoisParser integration tests', function() {
     it('random .biz domain should be available', async function() {
       await testAvailable('.biz');
     });
+    
+    it('known .mobi should not be available and have data', async function () {
+      await testNotAvailable('google', '.mobi');
+    });
+    it('random .mobi domain should be available', async function() {
+      await testAvailable('.mobi');
+    });
 });

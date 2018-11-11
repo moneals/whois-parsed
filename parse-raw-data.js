@@ -211,16 +211,6 @@ var kgRegex = {
     'notFound':                       'domain is available for registration'
 };
 
-// var ioRegex = {
-//     'domainName':                    'Domain Name: *(.+)',
-//     'registrar':                      'Registrar: *(.+)',
-//     'status':                         'Domain Status: *(.+)',
-//     'creationDate':                  'Creation Date: *(.+)',
-//     'expirationDate':                'Registry Expir\\w* Date: *(.+)',
-//     'updatedDate':                   'Updated Date: *(.+)',
-//     'notFound':                       'NOT FOUND'
-// };
-
 var parseRawData = function(rawData, domain) {
 	if (rawData === null) {
 	  throw new Error('No Whois data received');
@@ -233,7 +223,7 @@ var parseRawData = function(rawData, domain) {
 	var domainRegex = '';
   if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.name')) {
     domainRegex = defaultRegex;
-  } else if (domain.endsWith('.org') || domain.endsWith('.me')) {
+  } else if (domain.endsWith('.org') || domain.endsWith('.me') || domain.endsWith('.mobi')) {
     domainRegex = orgRegex;
   } else if (domain.endsWith('.au')) {
     domainRegex = auRegex;
