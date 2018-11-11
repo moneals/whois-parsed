@@ -17,7 +17,7 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
 
 async function testNotAvailable (base, tld, options = {}) {
   await sleep(3000);
-  var result = await whoisParser(base + tld);
+  var result = await whoisParser.lookup(base + tld);
   // console.log (result);
   if (tld === '.рф') { // this gets translated to puny code
     expect(punycode.toUnicode(result['domainName'])).to.equal(base + tld); 
@@ -46,7 +46,7 @@ async function testNotAvailable (base, tld, options = {}) {
 async function testAvailable (tld) {
   await sleep(3000);
   var rString = randomString(32).toLowerCase();
-  var result = await whoisParser(rString + tld);
+  var result = await whoisParser.lookup(rString + tld);
   //console.log(result);
   expect(result['domainName']).to.equal(rString + tld);
   expect(result['isAvailable']).to.equal(true);
