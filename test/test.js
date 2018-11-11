@@ -297,4 +297,17 @@ describe('#whoisParser integration tests', function() {
     it('random .is domain should be available', async function() {
       await testAvailable('.is');
     });
+    
+    it('domains with multiple status values should list all statuses', async function () {
+      await sleep(3000);
+      var result = await whoisParser.lookup('google.com');
+      expect(result['domainName']).to.equal('google.com');
+      expect(result['isAvailable']).to.equal(false);
+      assert.beforeDate(new Date(), new Date(result['expirationDate']));
+      assert.afterDate(new Date(), new Date(result['creationDate']));
+      assert.afterDate(new Date(), new Date(result['updatedDate']));
+      expect(result['status'].length).to.be.above(1);
+      expect(result.hasOwnProperty('registrar')).to.be.true;
+      expect(result.hasOwnProperty('dateFormat')).to.be.false;
+    });
 });

@@ -339,14 +339,15 @@ var parseRawData = function(rawData, domain) {
             result['isAvailable'] = true;
         }
       } else {
-        //var value = line.match(regex)[line.match(regex).length-1];
         var value = rawData.match(regex)[rawData.match(regex).length-1];
         if (key === 'status') {
-          if (result[key]) {
-            result[key].push(value);
-          } else {
-            result[key] = [value];
-          }
+          rawData.match(regex).forEach((statusMatch) => {
+            if (result[key]) {
+              result[key].push(statusMatch);
+            } else {
+              result[key] = [statusMatch];
+            }
+          });
         } else if (key === 'expirationDate') {
           if (domainRegex.hasOwnProperty('dateFormat')) {
             result[key] = moment(value, domainRegex.dateFormat).toJSON();
