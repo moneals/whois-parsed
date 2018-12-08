@@ -7,6 +7,7 @@ const punycode = require('punycode');
 
 //TODO Add unit tests that use stored whois responses when hit connection reset or rate limit error
 //TODO Add tests for registrar field
+//TODO Add tests for specific status values for specific well known domains
 
 function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
   var result = '';
@@ -72,35 +73,35 @@ describe('#whoisParser integration tests', function() {
     it('random .com domain should be available', async function() {
       await testAvailable('.com');
     });
-    
+
     it('known .net should not be available and have data', async function () {
       await testNotAvailable('google', '.net');
     });
     it('random .net domain should be available', async function() {
       await testAvailable('.net');
     });
-    
+
     it('known .org should not be available and have data', async function () {
       await testNotAvailable('google', '.org');
     });
     it('random .org domain should be available', async function() {
       await testAvailable('.org');
     });
-    
+
     it('known .name should not be available and have data', async function () {
       await testNotAvailable('google', '.name', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
     });
     it('random .name domain should be available', async function() {
       await testAvailable('.name');
     });
-    
+
     it('known .me should not be available and have data', async function () {
       await testNotAvailable('google', '.me');
     });
     it('random .me domain should be available', async function() {
       await testAvailable('.me');
     });
-    
+
     // updatedDate is sometimes populated for .au domains, but not always.
     it('known .au should not be available and have data', async function () {
       await testNotAvailable('google.com', '.au', { excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
@@ -108,91 +109,91 @@ describe('#whoisParser integration tests', function() {
     it('random .au domain should be available', async function() {
       await testAvailable('.com.au');
     });
-    
+
     it('known .ru should not be available and have data', async function () {
       await testNotAvailable('google', '.ru', {excludedFields: ['updatedDate']});
     });
     it('random .ru domain should be available', async function() {
       await testAvailable('.ru');
     });
-    
+
     it('known .us should not be available and have data', async function () {
       await testNotAvailable('google', '.us');
     });
     it('random .us domain should be available', async function() {
       await testAvailable('.us');
     });
-    
+
     it('known .uk should not be available and have data', async function () {
       await testNotAvailable('google.co', '.uk', { excludedFields: ['status']});
     });
     it('random .uk domain should be available', async function() {
       await testAvailable('.co.uk');
     });
-    
+
     it('known .fr should not be available and have data', async function () {
       await testNotAvailable('google', '.fr');
     });
     it('random .fr domain should be available', async function() {
       await testAvailable('.fr');
     });
-    
+
     it('known .nl should not be available and have data', async function () {
       await testNotAvailable('google', '.nl', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate']});
     });
     it('random .nl domain should be available', async function() {
       await testAvailable('.nl');
     });
-    
+
     it('known .fi should not be available and have data', async function () {
       await testNotAvailable('google', '.fi');
     });
     it('random .fi domain should be available', async function() {
       await testAvailable('.fi');
     });
-    
+
     it('known .jp should not be available and have data', async function () {
       await testNotAvailable('google', '.jp', {excludedFields: ['registrar']});
     });
     it('random .jp domain should be available', async function() {
       await testAvailable('.jp');
     });
-    
+
     it('known .pl should not be available and have data', async function () {
       await testNotAvailable('google', '.pl', {excludedFields: ['status']});
     });
     it('random .pl domain should be available', async function() {
       await testAvailable('.pl');
     });
-    
+
     it('known .br should not be available and have data', async function () {
       await testNotAvailable('google.com', '.br', {excludedFields: ['registrar']});
     });
     it('random .br domain should be available', async function() {
       await testAvailable('.com.br');
     });
-    
+
     it('known .eu should not be available and have data', async function () {
       await testNotAvailable('google', '.eu', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate', 'status']});
     });
     it('random .eu domain should be available', async function() {
       await testAvailable('.eu');
     });
-    
+
     it('known .ee should not be available and have data', async function () {
       await testNotAvailable('google', '.ee');
     });
     it('random .ee domain should be available', async function() {
       await testAvailable('.ee');
     });
-    
+
     it('known .kr should not be available and have data', async function () {
       await testNotAvailable('google', '.kr', {excludedFields: ['status']});
     });
     it('random .kr domain should be available', async function() {
       await testAvailable('.kr');
     });
-    
+
     it('known .bg should not be available and have data', async function () {
       await testNotAvailable('google', '.bg', {excludedFields: ['creationDate', 'expirationDate', 'updatedDate', 'registrar']});
     });
