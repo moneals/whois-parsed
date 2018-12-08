@@ -1,7 +1,7 @@
 var moment = require('moment');
 
 var defaultRegex = {
-  'domainName':          'Domain Name: *(.+)',
+  'domainName':          'Domain Name: *([^\\s]+)',
   'registrar':            'Registrar: *(.+)',
   'updatedDate':         'Updated Date: *(.+)',
   'creationDate':        'Creation Date: *(.+)',
@@ -11,7 +11,7 @@ var defaultRegex = {
 };
 
 var orgRegex = {
-  'domainName':          'Domain Name: *(.+)',
+  'domainName':          'Domain Name: *([^\\s]+)',
   'registrar':            'Registrar: *(.+)',
   'updatedDate':         'Updated Date: *(.+)',
   'creationDate':        'Creation Date: *(.+)',
@@ -21,7 +21,7 @@ var orgRegex = {
 };
 
 var auRegex = {
-    'domainName':                    'Domain Name: *(.+)',
+    'domainName':                    'Domain Name: *([^\\s]+)',
     'updatedDate':			      'Last Modified: *(.+)',
     'registrar':                      'Registrar Name: *(.+)',
     'status':                         'Status: *(.+)',
@@ -30,7 +30,7 @@ var auRegex = {
 };
 
 var usRegex = {
-  'domainName':                    'Domain Name: *(.+)',
+  'domainName':                    'Domain Name: *([^\\s]+)',
   'registrar':                      'Registrar: *(.+)',
   'status':                         'Domain Status: *(.+)',
   'creationDate':                  'Creation Date: *(.+)',
@@ -40,7 +40,7 @@ var usRegex = {
 };
 
 var ruRegex = { // and .рф .su
-    'domainName': 'domain: *(.+)',
+    'domainName': 'domain: *([^\\s]+)',
     'registrar': 'registrar: *(.+)',
     'creationDate': 'created: *(.+)',
     'expirationDate': 'paid-till: *(.+)',
@@ -49,7 +49,7 @@ var ruRegex = { // and .рф .su
 };
 
 var ukRegex = {
-    'domainName':                    'Domain name:\\s*(.+)',
+    'domainName':                    'Domain name:\\s*([^\\s]+)',
     'registrar':                      'Registrar:\\s*(.+)',
     'status':                         'Registration status:\\s*(.+)',
     'creationDate':                  'Registered on:\\s*(.+)',
@@ -60,18 +60,18 @@ var ukRegex = {
 };
 
 var frRegex = {
-    'domainName': 'domain: *(.+)',
+    'domainName': 'domain: *([^\\s]+)',
     'registrar': 'registrar: *(.+)',
     'creationDate': 'created: *(.+)',
     'expirationDate': 'Expir\\w+ Date:\\s?(.+)',
     'status': 'status: *(.+)',
     'updatedDate': 'last-update: *(.+)',
     'notFound': 'No entries found in ',
-    'dateFormat': 'DD/MM/YYYY'
+    'dateFormat': 'YYYY-MM-DDThh:mm:ssZ'
 }
 
 var nlRegex = {
-    'domainName': 'Domain Name: *(.+)',
+    'domainName': 'Domain Name: *([^\\s]+)',
     'registrar':  'Registrar: *\\s*(.+)',
     'status': 'Status: *(.+)',
     'notFound': '\\.nl is free',
@@ -90,7 +90,7 @@ var fiRegex = {
 };
 
 var jpRegex = {
-    'domainName': '\\[Domain Name\\]\\s*(.+)',
+    'domainName': '\\[Domain Name\\]\\s*([^\\s]+)',
     'creationDate': '\\[Created on\\]\\s*(.+)',
     'updatedDate':  '\\[Last Updated\\]\\s?(.+)',
     'expirationDate':  '\\[Expires on\\]\\s?(.+)',
@@ -100,7 +100,7 @@ var jpRegex = {
 };
 
 var plRegex = {
-    'domainName':                    'DOMAIN NAME: *(.+)[\s]+$',
+    'domainName':                    'DOMAIN NAME: *([^\\s]+)[\s]+$',
     'registrar':                      'REGISTRAR: *\\s*(.+)',
     'status':                         'Registration status:\\n\\s*(.+)',
     'creationDate':                  'created: *(.+)',
@@ -111,7 +111,7 @@ var plRegex = {
 };
 
 var brRegex = {
-    'domainName':                        'domain: *(.+)\n',
+    'domainName':                        'domain: *([^\\s]+)\n',
     'status':                        'status: *(.+)',
     'creationDate':                        'created: *(.+)',
     'expirationDate':                        'expires: *(.+)',
@@ -138,7 +138,7 @@ var eeRegex = {
 };
 
 var krRegex = {
-    'domainName': 'Domain Name\\s*: *(.+)',
+    'domainName': 'Domain Name\\s*: *([^\\s]+)',
     'creationDate': 'Registered Date\\s*: *(.+)',
     'updatedDate':  'Last Updated Date\\s*: *(.+)',
     'expirationDate':  'Expiration Date\\s*: *(.+)',
@@ -148,21 +148,21 @@ var krRegex = {
 };
 
 var bgRegex = {
-    'domainName': 'DOMAIN NAME: *(.+)\\n',
+    'domainName': 'DOMAIN NAME: *([^\\s]+)',
     'status': 'registration status: s*(.+)',
     'notFound': ' does not exist in database',
     'rateLimited': 'Query limit exceeded'
 };
 
 var deRegex = {
-    'domainName': 'Domain: *(.+)',
+    'domainName': 'Domain: *([^\\s]+)',
     'status': 'Status: *(.+)',
     'updatedDate': 'Changed: *(.+)',
     'notFound': 'Status: *free'
 };
 
 var atRegex = {
-    'domainName': 'domain: *(.+)',
+    'domainName': 'domain: *([^\\s]+)',
     'updatedDate': 'changed: *(.+)',
     'registrar':  'registrar: *(.+)',
     'notFound': ' nothing found',
@@ -171,7 +171,7 @@ var atRegex = {
 };
 
 var caRegex = {
-    'domainName':                    'Domain name: *(.+)',
+    'domainName':                    'Domain name: *([^\\s]+)',
     'status':                  'Domain status: *(.+)',
     'updatedDate':                   'Updated date: *(.+)',
     'creationDate':                  'Creation date: *(.+)',
@@ -182,7 +182,7 @@ var caRegex = {
 };
 
 var beRegex = {
-    'domainName': 'Domain:\\s*(.+)',
+    'domainName': 'Domain:\\s*([^\\s]+)',
     'registrar':                      'Registrar: *[\\n\\r]+\\s*Name:\\s*(.+)',
     'status':   'Status:\\s*(.+)',
     'creationDate':   'Registered: *(.+)',
@@ -191,7 +191,7 @@ var beRegex = {
 };
 
 var infoRegex = {
-    'domainName':      'Domain Name: *(.+)',
+    'domainName':      'Domain Name: *([^\\s]+)',
     'registrar':        'Registrar: *(.+)',
     'updatedDate':     'Updated Date: *(.+)',
     'creationDate':    'Creation Date: *(.+)',
@@ -202,7 +202,7 @@ var infoRegex = {
 };
 
 var kgRegex = {
-    'domainName':                    '^Domain\\s*(.+)',
+    'domainName':                    '^Domain\\s*([^\\s]+)',
     'registrar':                      'Domain support: \\s*(.+)',
     'creationDate':                  'Record created:\\s*(.+)',
     'expirationDate':                'Record expires on:\\s*(.+)',
@@ -212,7 +212,7 @@ var kgRegex = {
 };
 
 // var chRegex = {
-//     'domainName':                      '\\nDomain name:\\n*(.+)',
+//     'domainName':                      '\\nDomain name:\\n*([^\s]+)',
 //     'registrar':                        'Registrar:\n*(.+)',
 //     'creationDate':                    'First registration date:\\n*(.+)',
 //     'rateLimited':                      'Please wait a moment and try again.',
@@ -221,7 +221,7 @@ var kgRegex = {
 // };
 
 var idRegex = {
-    'domainName':                 'Domain Name:(.+)',
+    'domainName':                 'Domain Name:([^\\s]+)',
     'creationDate':               'Created On:(.+)',
     'expirationDate':             'Expiration Date(.+)',
     'updatedDate':                'Last Updated On(.+)',
@@ -232,7 +232,7 @@ var idRegex = {
 };
 
 var skRegex = {
-    'domainName':                  'Domain:\\s*(.+)',
+    'domainName':                  'Domain:\\s*([^\\s]+)',
     'creationDate':                 'Created:\\s*(.+)',
     'expirationDate':              'Valid Until:\\s*(.+)',
     'status':                       'EPP Status:\\s*(.+)',
@@ -243,7 +243,7 @@ var skRegex = {
 };
 
 var seRegex = {
-    'domainName':                    'domain\\.*: *(.+)',
+    'domainName':                    'domain\\.*: *([^\\s]+)',
     'creationDate':                  'created\\.*: *(.+)',
     'updatedDate':                   'modified\\.*: *(.+)',
     'expirationDate':                'expires\\.*: *(.+)',
@@ -254,7 +254,7 @@ var seRegex = {
 };
 
 var isRegex = {
-    'domainName':      'domain\\.*: *(.+)',
+    'domainName':      'domain\\.*: *([^\\s]+)',
     'creationDate':    'created\\.*: *(.+)',
     'expirationDate':  'expires\\.*: *(.+)',
     'dateFormat':       'MMM DD YYYY',

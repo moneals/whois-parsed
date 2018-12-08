@@ -2,7 +2,6 @@ const chai = require('chai');
 const expect = chai.expect;
 chai.use(require('chai-datetime'));
 const assert = chai.assert;
-const sleep = require('util').promisify(setTimeout);
 var whoisParser = require('../index');
 const punycode = require('punycode');
 
@@ -16,7 +15,6 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
 }
 
 async function testNotAvailable (base, tld, options = {}) {
-  await sleep(3000);
   var result = await whoisParser.lookup(base + tld);
   // console.log (result);
   if (tld === '.рф') { // this gets translated to puny code
@@ -44,7 +42,6 @@ async function testNotAvailable (base, tld, options = {}) {
 }
 
 async function testAvailable (tld) {
-  await sleep(3000);
   var rString = randomString(32).toLowerCase();
   var result = await whoisParser.lookup(rString + tld);
   //console.log(result);
@@ -59,6 +56,16 @@ async function testAvailable (tld) {
     
 describe('#whoisParser integration tests', function() {
     this.timeout(10000);
+
+    beforeEach(() => {
+        // Pause 3 seconds in between requests to help prevent rate limiting
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 3000);
+        });
+    });
+
     it('known .com should not be available and have data', async function () {
       await testNotAvailable('google', '.com');
     });
@@ -299,7 +306,6 @@ describe('#whoisParser integration tests', function() {
     });
     
     it('domains with multiple status values should list all statuses', async function () {
-      await sleep(3000);
       var result = await whoisParser.lookup('google.com');
       expect(result['domainName']).to.equal('google.com');
       expect(result['isAvailable']).to.equal(false);
