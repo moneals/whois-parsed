@@ -317,4 +317,16 @@ describe('#whoisParser integration tests', function() {
       expect(result.hasOwnProperty('registrar')).to.be.true;
       expect(result.hasOwnProperty('dateFormat')).to.be.false;
     });
+
+	it('domains with fastdomain.com registrar should work', async function () {
+		var result = await whoisParser.lookup('st-andrews-school.org');
+		expect(result['domainName']).to.equal('st-andrews-school.org');
+		expect(result['isAvailable']).to.equal(false);
+		assert.beforeDate(new Date(), new Date(result['expirationDate']));
+		assert.afterDate(new Date(), new Date(result['creationDate']));
+		assert.afterDate(new Date(), new Date(result['updatedDate']));
+		expect(result['status'].length).to.be.above(2);
+		expect(result.hasOwnProperty('registrar')).to.be.true;
+		expect(result.hasOwnProperty('dateFormat')).to.be.false;
+	});
 });
