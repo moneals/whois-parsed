@@ -5,7 +5,15 @@ var util = require('util'),
 var lookup = util.promisify(whois.lookup);
 
 module.exports = {
-  lookup: async function(domain, options){
+  lookup: async function(domain, options = {}) {
+		// Where possible don't follow the detailed results to improve efficiency
+	  if (options && !options.hasOwnProperty('follow')) {
+		  if (domain.endsWith('.org') ||
+			    domain.endsWith('.net') ||
+			    domain.endsWith('.com')) {
+		  	options['follow'] = 0
+		  }
+	  }
     //console.log('looking up whois for ' + domain);
 	  var result = {};
 	  try {

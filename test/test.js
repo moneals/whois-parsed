@@ -200,112 +200,112 @@ describe('#whoisParser integration tests', function() {
     it('random .bg domain should be available', async function() {
       await testAvailable('.bg');
     });
-    
+
     it('known .de should not be available and have data', async function () {
       await testNotAvailable('google', '.de', {excludedFields: ['creationDate', 'expirationDate', 'registrar']});
     });
     it('random .de domain should be available', async function() {
       await testAvailable('.de');
     });
-    
+
     it('known .at should not be available and have data', async function () {
       await testNotAvailable('google', '.at', {excludedFields: ['creationDate', 'expirationDate', 'status']});
     });
     it('random .at domain should be available', async function() {
       await testAvailable('.at');
     });
-    
+
     it('known .ca should not be available and have data', async function () {
       await testNotAvailable('google', '.ca');
     });
     it('random .ca domain should be available', async function() {
       await testAvailable('.ca');
     });
-    
+
     it('known .be should not be available and have data', async function () {
       await testNotAvailable('google', '.be', {excludedFields: ['updatedDate', 'expirationDate']});
     });
     it('random .be domain should be available', async function() {
       await testAvailable('.be');
     });
-    
+
     it('known .рф should not be available and have data', async function () {
       await testNotAvailable('президент', '.рф', {excludedFields: ['updatedDate']});
     });
     it('random .рф domain should be available', async function() {
       await testAvailable('.рф');
     });
-    
+
     it('known .info should not be available and have data', async function () {
       await testNotAvailable('google', '.info');
     });
     it('random .info domain should be available', async function() {
       await testAvailable('.info');
     });
-    
+
     it('known .su should not be available and have data', async function () {
       await testNotAvailable('google', '.su', {excludedFields: ['updatedDate']});
     });
     it('random .su domain should be available', async function() {
       await testAvailable('.su');
     });
-    
+
     it('known .kg should not be available and have data', async function () {
       await testNotAvailable('google', '.kg', {excludedFields: ['status']});
     });
     it('random .kg domain should be available', async function() {
       await testAvailable('.kg');
     });
-    
+
     it('known .biz should not be available and have data', async function () {
       await testNotAvailable('google', '.biz');
     });
     it('random .biz domain should be available', async function() {
       await testAvailable('.biz');
     });
-    
+
     it('known .mobi should not be available and have data', async function () {
       await testNotAvailable('google', '.mobi');
     });
     it('random .mobi domain should be available', async function() {
       await testAvailable('.mobi');
     });
-    
+
     it('known .id should not be available and have data', async function () {
       await testNotAvailable('google', '.id');
     });
     it('random .id domain should be available', async function() {
       await testAvailable('.id');
     });
-    
+
     it('known .sk should not be available and have data', async function () {
       await testNotAvailable('google', '.sk');
     });
     it('random .sk domain should be available', async function() {
       await testAvailable('.sk');
     });
-    
+
     it('known .se should not be available and have data', async function () {
       await testNotAvailable('google', '.se');
     });
     it('random .se domain should be available', async function() {
       await testAvailable('.se');
     });
-    
+
     it('known .nu should not be available and have data', async function () {
       await testNotAvailable('google', '.nu');
     });
     it('random .se domain should be available', async function() {
       await testAvailable('.se');
     });
-    
+
     it('known .is should not be available and have data', async function () {
       await testNotAvailable('google', '.is', {excludedFields: ['updatedDate', 'status', 'registrar']});
     });
     it('random .is domain should be available', async function() {
       await testAvailable('.is');
     });
-    
+
     it('domains with multiple status values should list all statuses', async function () {
       var result = await whoisParser.lookup('google.com');
       expect(result['domainName']).to.equal('google.com');
@@ -318,14 +318,14 @@ describe('#whoisParser integration tests', function() {
       expect(result.hasOwnProperty('dateFormat')).to.be.false;
     });
 
-	it('domains with fastdomain.com registrar should work', async function () {
+	it('domains with a broken registrar link should work', async function () {
 		var result = await whoisParser.lookup('st-andrews-school.org');
 		expect(result['domainName']).to.equal('st-andrews-school.org');
 		expect(result['isAvailable']).to.equal(false);
 		assert.beforeDate(new Date(), new Date(result['expirationDate']));
 		assert.afterDate(new Date(), new Date(result['creationDate']));
 		assert.afterDate(new Date(), new Date(result['updatedDate']));
-		expect(result['status'].length).to.be.above(2);
+		expect(result['status'].length).to.be.above(0);
 		expect(result.hasOwnProperty('registrar')).to.be.true;
 		expect(result.hasOwnProperty('dateFormat')).to.be.false;
 	});
