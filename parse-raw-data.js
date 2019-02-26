@@ -171,14 +171,13 @@ var atRegex = {
 };
 
 var caRegex = {
-	'domainName': 'Domain name: *([^\\s]+)',
-	'status': 'Domain status: *(.+)',
-	'updatedDate': 'Updated date: *(.+)',
-	'creationDate': 'Creation date: *(.+)',
-	'expirationDate': 'Expiry date: *(.+)',
-	'registrar': 'Registrar: *[\\n\\r]+\\s*Name: *(.+)',
-	'notFound': 'Domain status: *available',
-	'dateFormat': 'YYYY/MM/DD'
+	'domainName': 'Domain Name: *([^\\s]+)',
+	'status': 'Domain Status: *(.+)',
+	'updatedDate': 'Updated Date: *(.+)',
+	'creationDate': 'Creation Date: *(.+)',
+	'expirationDate': 'Expiry Date: *(.+)',
+	'registrar': 'Registrar: *(.+)',
+	'notFound': 'Not found: '
 };
 
 var beRegex = {
