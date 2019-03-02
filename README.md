@@ -5,6 +5,8 @@ A wrapper for the fantastic whois module that parses whois data into consistent 
 
 Inspiration (and regex) borrowed from the python library https://bitbucket.org/richardpenman/pywhois
 
+If you find this package useful please give us a star!
+
 ## Installation
 
   `npm install whois-parsed`
@@ -75,6 +77,11 @@ whois-parsed does not handle retry logic by design. It isn't uncommon to have wh
 ## Tests
 
   `npm test`
+  
+## Paid Version
+
+If you don't want to deal with proxies, rate limits, retries, etc. then you may be interested in a hosted domain
+availability API: https://rapidapi.com/moneals/api/domaination-io. This API gives you 10,000 free calls per month.
 
 ## Contributing
 

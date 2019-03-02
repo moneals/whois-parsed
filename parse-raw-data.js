@@ -4,10 +4,20 @@ var defaultRegex = {
 	'domainName': 'Domain Name: *([^\\s]+)',
 	'registrar': 'Registrar: *(.+)',
 	'updatedDate': 'Updated Date: *(.+)',
-	'creationDate': 'Creation Date: *(.+)',
+	'creationDate': 'Creat(ed|ion) Date: *(.+)',
 	'expirationDate': 'Expir\\w+ Date: *(.+)',
 	'status': 'Status:\\s*(.+)\\s*\\n',
-	'notFound': 'No match for '
+	'notFound': '(No match for |Domain not found|NOT FOUND\\s)'
+};
+
+var comRegex = {
+    'domainName': 'Domain Name: *([^\\s]+)',
+    'registrar': 'Registrar: *(.+)',
+    'updatedDate': 'Updated Date: *(.+)',
+    'creationDate': 'Creation Date: *(.+)',
+    'expirationDate': 'Expir\\w+ Date: *(.+)',
+    'status': 'Status:\\s*(.+)\\s*\\n',
+    'notFound': 'No match for '
 };
 
 var orgRegex = {
@@ -261,131 +271,146 @@ var isRegex = {
 };
 
 var parseRawData = function (rawData, domain) {
-	if (rawData === null) {
-		throw new Error('No Whois data received');
-	} else if (rawData.length <= 10) {
-		throw new Error('Bad WHOIS Data: "' + rawData + '"');
-	}
+    if (rawData === null) {
+        throw new Error('No Whois data received');
+    } else if (rawData.length <= 10) {
+        throw new Error('Bad WHOIS Data: "' + rawData + '"');
+    }
 
-	var result = {domainName: domain};
+    var result = {domainName: domain};
 
-	var domainRegex = '';
-	if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.name')) {
-		domainRegex = defaultRegex;
-	} else if (domain.endsWith('.org') || domain.endsWith('.me') || domain.endsWith('.mobi')) {
-		domainRegex = orgRegex;
-	} else if (domain.endsWith('.au')) {
-		domainRegex = auRegex;
-	} else if (domain.endsWith('.ru') || domain.endsWith('.рф') || domain.endsWith('.su')) {
-		domainRegex = ruRegex;
-	} else if (domain.endsWith('.us') || domain.endsWith('.biz')) {
-		domainRegex = usRegex;
-	} else if (domain.endsWith('.uk')) {
-		domainRegex = ukRegex;
-	} else if (domain.endsWith('.fr')) {
-		domainRegex = frRegex;
-	} else if (domain.endsWith('.nl')) {
-		domainRegex = nlRegex;
-	} else if (domain.endsWith('.fi')) {
-		domainRegex = fiRegex;
-	} else if (domain.endsWith('.jp')) {
-		domainRegex = jpRegex;
-	} else if (domain.endsWith('.pl')) {
-		domainRegex = plRegex;
-	} else if (domain.endsWith('.br')) {
-		domainRegex = brRegex;
-	} else if (domain.endsWith('.eu')) {
-		domainRegex = euRegex;
-	} else if (domain.endsWith('.ee')) {
-		domainRegex = eeRegex;
-	} else if (domain.endsWith('.kr')) {
-		domainRegex = krRegex;
-	} else if (domain.endsWith('.bg')) {
-		domainRegex = bgRegex;
-	} else if (domain.endsWith('.de')) {
-		domainRegex = deRegex;
-	} else if (domain.endsWith('.at')) {
-		domainRegex = atRegex;
-	} else if (domain.endsWith('.ca')) {
-		domainRegex = caRegex;
-	} else if (domain.endsWith('.be')) {
-		domainRegex = beRegex;
-	} else if (domain.endsWith('.kg')) {
-		domainRegex = kgRegex;
-	} else if (domain.endsWith('.info')) {
-		domainRegex = infoRegex;
-		// } else if (domain.endsWith('.ch') || domain.endsWith('.li')) {
-		//   domainRegex = infoRegex;
-	} else if (domain.endsWith('.id')) {
-		domainRegex = idRegex;
-	} else if (domain.endsWith('.sk')) {
-		domainRegex = skRegex;
-	} else if (domain.endsWith('.se') || domain.endsWith('.nu')) {
-		domainRegex = seRegex;
-	} else if (domain.endsWith('.is')) {
-		domainRegex = isRegex;
-	} else {
-		throw new Error('TLD not supported');
-	}
+    var unknownTLD = false;
+    var domainRegex = '';
+    if (domain.endsWith('.com') || domain.endsWith('.net') || domain.endsWith('.name')) {
+        domainRegex = comRegex;
+    } else if (domain.endsWith('.org') || domain.endsWith('.me') || domain.endsWith('.mobi')) {
+        domainRegex = orgRegex;
+    } else if (domain.endsWith('.au')) {
+        domainRegex = auRegex;
+    } else if (domain.endsWith('.ru') || domain.endsWith('.рф') || domain.endsWith('.su')) {
+        domainRegex = ruRegex;
+    } else if (domain.endsWith('.us') || domain.endsWith('.biz')) {
+        domainRegex = usRegex;
+    } else if (domain.endsWith('.uk')) {
+        domainRegex = ukRegex;
+    } else if (domain.endsWith('.fr')) {
+        domainRegex = frRegex;
+    } else if (domain.endsWith('.nl')) {
+        domainRegex = nlRegex;
+    } else if (domain.endsWith('.fi')) {
+        domainRegex = fiRegex;
+    } else if (domain.endsWith('.jp')) {
+        domainRegex = jpRegex;
+    } else if (domain.endsWith('.pl')) {
+        domainRegex = plRegex;
+    } else if (domain.endsWith('.br')) {
+        domainRegex = brRegex;
+    } else if (domain.endsWith('.eu')) {
+        domainRegex = euRegex;
+    } else if (domain.endsWith('.ee')) {
+        domainRegex = eeRegex;
+    } else if (domain.endsWith('.kr')) {
+        domainRegex = krRegex;
+    } else if (domain.endsWith('.bg')) {
+        domainRegex = bgRegex;
+    } else if (domain.endsWith('.de')) {
+        domainRegex = deRegex;
+    } else if (domain.endsWith('.at')) {
+        domainRegex = atRegex;
+    } else if (domain.endsWith('.ca')) {
+        domainRegex = caRegex;
+    } else if (domain.endsWith('.be')) {
+        domainRegex = beRegex;
+    } else if (domain.endsWith('.kg')) {
+        domainRegex = kgRegex;
+    } else if (domain.endsWith('.info')) {
+        domainRegex = infoRegex;
+        // } else if (domain.endsWith('.ch') || domain.endsWith('.li')) {
+        //   domainRegex = infoRegex;
+    } else if (domain.endsWith('.id')) {
+        domainRegex = idRegex;
+    } else if (domain.endsWith('.sk')) {
+        domainRegex = skRegex;
+    } else if (domain.endsWith('.se') || domain.endsWith('.nu')) {
+        domainRegex = seRegex;
+    } else if (domain.endsWith('.is')) {
+        domainRegex = isRegex;
+    } else {
+        domainRegex = defaultRegex;
+        unknownTLD = true;
+    }
 
-	Object.keys(domainRegex).forEach(function (key) {
-		// Find multiple matches for status field
-		if (key === 'status') {
-			var regex = new RegExp(domainRegex[key], 'g');
-		} else {
-			var regex = new RegExp(domainRegex[key]);
-		}
+    Object.keys(domainRegex).forEach(function (key) {
+        // Find multiple matches for status field
+        if (key === 'status') {
+            var regex = new RegExp(domainRegex[key], 'g');
+        } else {
+            var regex = new RegExp(domainRegex[key]);
+        }
 
-		if (rawData.match(regex) && key !== 'dateFormat') { // dateformat not used for line matching
-			if (key === 'rateLimited') {
-				throw new Error('Rate Limited');
-			} else if (key === 'notFound') {
-				if (!result.hasOwnProperty('isAvailable')) {
-					result['isAvailable'] = true;
-				}
-			} else {
-				var value = rawData.match(regex)[rawData.match(regex).length - 1];
-				if (key === 'status') {
-					var matches = [];
-					while (matches = regex.exec(rawData)) {
-						if (result[key]) {
-							result[key].push(matches[1]);
-						} else {
-							result[key] = [matches[1]];
-						}
-					}
-				} else if (key === 'expirationDate') {
-					if (domainRegex.hasOwnProperty('dateFormat')) {
-						result[key] = moment(value, domainRegex.dateFormat).toJSON();
-					} else {
-						result[key] = moment(value).toJSON();
-					}
-				} else if (key === 'creationDate') {
-					if (domainRegex.hasOwnProperty('dateFormat')) {
-						result[key] = moment(value, domainRegex.dateFormat).toJSON();
-					} else {
-						result[key] = moment(value).toJSON();
-					}
-				} else if (key === 'updatedDate') {
-					if (domainRegex.hasOwnProperty('dateFormat')) {
-						result[key] = moment(value, domainRegex.dateFormat).toJSON();
-					} else {
-						result[key] = moment(value).toJSON();
-					}
-				} else if (key === 'domainName') {
-					result[key] = value.toLowerCase();
-				} else {
-					result[key] = value;
-				}
-			}
-		}
-	});
-	if (!result.hasOwnProperty('isAvailable')) {
-		result.isAvailable = false;
-	}
-	// console.log('rawData: "' + rawData + '"');
-	// console.log('result ' + JSON.stringify(result));
-	return result;
+        if (rawData.match(regex) && key !== 'dateFormat') { // dateformat not used for line matching
+            if (key === 'rateLimited') {
+                throw new Error('Rate Limited');
+            } else if (key === 'notFound') {
+                if (!result.hasOwnProperty('isAvailable')) {
+                    result['isAvailable'] = true;
+                }
+            } else {
+                var value = rawData.match(regex)[rawData.match(regex).length - 1];
+                if (key === 'status') {
+                    var matches = [];
+                    while (matches = regex.exec(rawData)) {
+                        if (result[key]) {
+                            result[key].push(matches[1]);
+                        } else {
+                            result[key] = [matches[1]];
+                        }
+                    }
+                } else if (key === 'expirationDate') {
+                    if (domainRegex.hasOwnProperty('dateFormat')) {
+                        result[key] = moment(value, domainRegex.dateFormat).toJSON();
+                    } else {
+                        result[key] = moment(value).toJSON();
+                    }
+                } else if (key === 'creationDate') {
+                    if (domainRegex.hasOwnProperty('dateFormat')) {
+                        result[key] = moment(value, domainRegex.dateFormat).toJSON();
+                    } else {
+                        result[key] = moment(value).toJSON();
+                    }
+                } else if (key === 'updatedDate') {
+                    if (domainRegex.hasOwnProperty('dateFormat')) {
+                        result[key] = moment(value, domainRegex.dateFormat).toJSON();
+                    } else {
+                        result[key] = moment(value).toJSON();
+                    }
+                } else if (key === 'domainName') {
+                    result[key] = value.toLowerCase();
+                } else {
+                    result[key] = value;
+                }
+            }
+        }
+    });
+    if (!result.hasOwnProperty('isAvailable')) {
+        result.isAvailable = false;
+    }
+
+    // console.log('rawData: "' + rawData + '"');
+    // console.log('result ' + JSON.stringify(result));
+
+    // Check to make sure certain fields are set for unknown TLDs to ensure the default pattern matching worked
+    // If not then throw TLD not supported error.
+    if (unknownTLD) {
+        if (!result.isAvailable) {
+            if (!result.hasOwnProperty('creationDate') || !result.hasOwnProperty('expirationDate') ||
+                !result.hasOwnProperty('updatedDate') || !result.hasOwnProperty('status') ||
+                !result.hasOwnProperty('registrar')) {
+                throw new Error('TLD not supported');
+            }
+        }
+    }
+    return result;
 };
 
 module.exports = parseRawData;

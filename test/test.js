@@ -5,18 +5,42 @@ const assert = chai.assert;
 var whoisParser = require('../index');
 const punycode = require('punycode');
 
-//TODO Add unit tests that use stored whois responses when hit connection reset or rate limit error
-//TODO Add tests for registrar field
-//TODO Add tests for specific status values for specific well known domains
-
 function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
   var result = '';
   for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
   return result;
 }
 
+function whoisWithRetries(domain, retriesLeft = 3) {
+    return new Promise(function(resolve, reject) {
+        whoisParser.lookup(domain)
+            .then ((results) => {
+                return resolve(results);
+            })
+            .catch ((error) => {
+                if (retriesLeft > 0 &&
+                    ((error.code && error.code === 'ECONNRESET')
+                        || error.message.match(/.*Bad WHOIS Data.*/)
+                        || error.message.match(/.*Rate Limited*/))) {
+                    console.warn('Retrying ' + domain + ' due to ' + error.message + ' error. Retries left: ' + retriesLeft);
+                    whoisWithRetries(domain, retriesLeft-1)
+                        .then((results) => {
+                            return resolve(results);
+                        })
+                        .catch((err) => {
+                            return reject(err);
+                        });
+                } else {
+                    console.log(error);
+                    return reject(error);
+                }
+            });
+    });
+}
+
 async function testNotAvailable (base, tld, options = {}) {
-  var result = await whoisParser.lookup(base + tld);
+  var result = await whoisWithRetries(base + tld);
+
   // console.log (result);
   if (tld === '.рф') { // this gets translated to puny code
     expect(punycode.toUnicode(result['domainName'])).to.equal(base + tld); 
@@ -44,7 +68,7 @@ async function testNotAvailable (base, tld, options = {}) {
 
 async function testAvailable (tld) {
   var rString = randomString(32).toLowerCase();
-  var result = await whoisParser.lookup(rString + tld);
+  var result = await whoisWithRetries(rString + tld);
   //console.log(result);
   expect(result['domainName']).to.equal(rString + tld);
   expect(result['isAvailable']).to.equal(true);
@@ -306,8 +330,38 @@ describe('#whoisParser integration tests', function() {
       await testAvailable('.is');
     });
 
+    it('known generic tld domain (.bike) should not be available and have data', async function () {
+        await testNotAvailable('red', '.bike');
+    });
+    it('random generic tld domain (.bike) should be available', async function() {
+        await testAvailable('.bike');
+    });
+    it('known generic tld domain (.asia) should not be available and have data', async function () {
+        await testNotAvailable('google', '.asia');
+    });
+    it('random generic tld domain (.asia) should be available', async function() {
+        await testAvailable('.asia');
+    });
+    it('known generic tld domain (.io) should not be available and have data', async function () {
+        await testNotAvailable('google', '.io');
+    });
+    it('random generic tld domain (.io) should be available', async function() {
+        await testAvailable('.io');
+    });
+
+    it('random tld domain should throw TLD not supported error', () => {
+        return whoisWithRetries('google.sdiekdsoclsld')
+            .then(
+                () => Promise.reject(new Error('Expected call to reject.')),
+                err => {
+                    assert.instanceOf(err, Error);
+                    assert.equal(err.message, 'TLD not supported');
+                }
+            );
+    });
+
     it('domains with multiple status values should list all statuses', async function () {
-      var result = await whoisParser.lookup('google.com');
+      var result = await whoisWithRetries('google.com');
       expect(result['domainName']).to.equal('google.com');
       expect(result['isAvailable']).to.equal(false);
       assert.beforeDate(new Date(), new Date(result['expirationDate']));
@@ -319,7 +373,7 @@ describe('#whoisParser integration tests', function() {
     });
 
 	it('domains with a broken registrar link should work', async function () {
-		var result = await whoisParser.lookup('st-andrews-school.org');
+		var result = await whoisWithRetries('st-andrews-school.org');
 		expect(result['domainName']).to.equal('st-andrews-school.org');
 		expect(result['isAvailable']).to.equal(false);
 		assert.beforeDate(new Date(), new Date(result['expirationDate']));
