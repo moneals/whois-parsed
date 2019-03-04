@@ -11,9 +11,9 @@ function randomString(length, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDE
   return result;
 }
 
-function whoisWithRetries(domain, retriesLeft = 3) {
+function whoisWithRetries(domain, retriesLeft = 3, options = {}) {
     return new Promise(function(resolve, reject) {
-        whoisParser.lookup(domain)
+        whoisParser.lookup(domain, options)
             .then ((results) => {
                 return resolve(results);
             })
@@ -23,7 +23,7 @@ function whoisWithRetries(domain, retriesLeft = 3) {
                         || error.message.match(/.*Bad WHOIS Data.*/)
                         || error.message.match(/.*Rate Limited*/))) {
                     console.warn('Retrying ' + domain + ' due to ' + error.message + ' error. Retries left: ' + retriesLeft);
-                    whoisWithRetries(domain, retriesLeft-1)
+                    whoisWithRetries(domain, retriesLeft-1, options)
                         .then((results) => {
                             return resolve(results);
                         })
@@ -80,7 +80,7 @@ async function testAvailable (tld) {
 }
     
 describe('#whoisParser integration tests', function() {
-    this.timeout(10000);
+    this.timeout(250000);
 
     beforeEach(() => {
         // Pause 3 seconds in between requests to help prevent rate limiting
@@ -383,4 +383,28 @@ describe('#whoisParser integration tests', function() {
 		expect(result.hasOwnProperty('registrar')).to.be.true;
 		expect(result.hasOwnProperty('dateFormat')).to.be.false;
 	});
+
+    //TODO call something like https://api.getproxylist.com/proxy?lastTested=300&protocol[]=socks5 to test proxy
+    it('proxy should work', async function () {
+        var whoisOptions = {
+            proxy: {
+                host: '118.190.206.86',
+                port: 9999,
+                // userId: "optional",
+                // password: "optional",
+                type: 5,
+            },
+            timeout: 30000,
+        };
+
+        var result = await whoisWithRetries('google.com', 3, whoisOptions);
+        expect(result['domainName']).to.equal('google.com');
+        expect(result['isAvailable']).to.equal(false);
+        assert.beforeDate(new Date(), new Date(result['expirationDate']));
+        assert.afterDate(new Date(), new Date(result['creationDate']));
+        assert.afterDate(new Date(), new Date(result['updatedDate']));
+        expect(result['status'].length).to.be.above(0);
+        expect(result.hasOwnProperty('registrar')).to.be.true;
+        expect(result.hasOwnProperty('dateFormat')).to.be.false;
+    });
 });

@@ -1,5 +1,5 @@
 var util = require('util'),
-	whois = require('whois'),
+	whois = require('whois-raw'),
 	parseRawData = require('./parse-raw-data.js');
 
 var lookup = util.promisify(whois.lookup);
