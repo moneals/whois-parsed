@@ -7,6 +7,7 @@ var defaultRegex = {
 	'creationDate': 'Creat(ed|ion) Date: *(.+)',
 	'expirationDate': 'Expir\\w+ Date: *(.+)',
 	'status': 'Status:\\s*(.+)\\s*\\n',
+	'dateFormat': 'YYYY-MM-DDThh:mm:ssZ',
 	'notFound': '(No match for |Domain not found|NOT FOUND\\s)'
 };
 
@@ -404,8 +405,7 @@ var parseRawData = function (rawData, domain) {
     if (unknownTLD) {
         if (!result.isAvailable) {
             if (!result.hasOwnProperty('creationDate') || !result.hasOwnProperty('expirationDate') ||
-                !result.hasOwnProperty('updatedDate') || !result.hasOwnProperty('status') ||
-                !result.hasOwnProperty('registrar')) {
+                !result.hasOwnProperty('updatedDate') || !result.hasOwnProperty('registrar')) {
                 throw new Error('TLD not supported');
             }
         }
