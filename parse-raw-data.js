@@ -47,7 +47,8 @@ var usRegex = {
 	'creationDate': 'Creation Date: *(.+)',
 	'expirationDate': 'Registry Expiry Date: *(.+)',
 	'updatedDate': 'Updated Date: *(.+)',
-	'notFound': '^No Data Found'
+	'notFound': '^No Data Found',
+	'dateFormat': 'YYYY-MM-DDThh:mm:ssZ'
 };
 
 var ruRegex = { // and .рф .su
@@ -271,6 +272,16 @@ var isRegex = {
 	'notFound': 'No entries found for query'
 };
 
+var coRegex = {
+    'domainName': 'Domain Name: *([^\\s]+)',
+    'registrar': 'Registrar: *(.+)',
+    'updatedDate': 'Updated Date: *(.+)',
+    'creationDate': 'Creation Date: *(.+)',
+    'expirationDate': 'Expir\\w+ Date: *(.+)',
+    'status': 'Status:\\s*(.+)\\s*\\n',
+    'notFound': 'No Data Found'
+};
+
 var parseRawData = function (rawData, domain) {
     if (rawData === null) {
         throw new Error('No Whois data received');
@@ -336,7 +347,9 @@ var parseRawData = function (rawData, domain) {
         domainRegex = seRegex;
     } else if (domain.endsWith('.is')) {
         domainRegex = isRegex;
-    } else {
+    } else if (domain.endsWith('.co')) {
+        domainRegex = coRegex;
+	} else {
         domainRegex = defaultRegex;
         unknownTLD = true;
     }

@@ -14,7 +14,7 @@ module.exports = {
 		  	options['follow'] = 0
 		  }
 	  }
-    //console.log('looking up whois for ' + domain);
+    console.log('looking up whois for ' + domain);
 	  var result = {};
 	  try {
 		  var rawData = await lookup(domain, options || {});

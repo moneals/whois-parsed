@@ -69,7 +69,7 @@ async function testNotAvailable (base, tld, options = {}) {
 async function testAvailable (tld) {
   var rString = randomString(32).toLowerCase();
   var result = await whoisWithRetries(rString + tld);
-  //console.log(result);
+  // console.log(result);
   expect(result['domainName']).to.equal(rString + tld);
   expect(result['isAvailable']).to.equal(true);
   expect(result.hasOwnProperty('creationDate')).to.be.false;
@@ -347,6 +347,12 @@ describe('#whoisParser integration tests', function() {
     });
     it('random generic tld domain (.io) should be available', async function() {
         await testAvailable('.io');
+    });
+    it('known .co should not be available and have data', async function () {
+      await testNotAvailable('google', '.co');
+    });
+    it('random .co domain should be available', async function() {
+      await testAvailable('.co');
     });
 
     it('random tld domain should throw TLD not supported error', () => {
