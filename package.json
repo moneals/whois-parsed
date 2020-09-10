@@ -34,6 +34,6 @@
   "dependencies": {
     "html-entities": "^1.2.1",
     "moment": "^2.22.2",
-    "whois-raw": "^0.1.5"
+    "whois-raw": "^0.1.7"
   }
 }
