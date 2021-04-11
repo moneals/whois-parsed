@@ -331,7 +331,7 @@ describe('#whoisParser integration tests', function() {
     });
 
     it('known generic tld domain (.bike) should not be available and have data', async function () {
-        await testNotAvailable('red', '.bike', {excludedFields: ['status']});
+        await testNotAvailable('nic', '.bike', {excludedFields: ['status']});
     });
     it('random generic tld domain (.bike) should be available', async function() {
         await testAvailable('.bike');
@@ -343,7 +343,7 @@ describe('#whoisParser integration tests', function() {
         await testAvailable('.asia');
     });
     it('known generic tld domain (.io) should not be available and have data', async function () {
-        await testNotAvailable('facebook', '.io', {excludedFields: ['status']} );
+        await testNotAvailable('google', '.io', {excludedFields: ['status']} );
     });
     it('random generic tld domain (.io) should be available', async function() {
         await testAvailable('.io');
