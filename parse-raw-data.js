@@ -45,7 +45,7 @@ var usRegex = {
 	'registrar': 'Registrar: *(.+)',
 	'status': 'Domain Status: *(.+)',
 	'creationDate': 'Creation Date: *(.+)',
-	'expirationDate': 'Registry Expiry Date: *(.+)',
+	'expirationDate': '(?:Registry Expiry|Registrar Registration Expiration) Date: *(.+)',
 	'updatedDate': 'Updated Date: *(.+)',
 	'notFound': '^No Data Found',
 	'dateFormat': 'YYYY-MM-DDThh:mm:ssZ'
@@ -234,12 +234,12 @@ var kgRegex = {
 var idRegex = {
 	'domainName': 'Domain Name:([^\\s]+)',
 	'creationDate': 'Created On:(.+)',
-	'expirationDate': 'Expiration Date(.+)',
-	'updatedDate': 'Last Updated On(.+)',
+	'expirationDate': 'Expiration Date: (.+)',
+	'updatedDate': 'Last Updated On: (.+)',
 	'registrar': 'Sponsoring Registrar Organization:(.+)',
 	'status': 'Status:(.+)',
 	'notFound': 'DOMAIN NOT FOUND',
-	'dateFormat': 'DD-MMM-YYYY HH:mm:ss UTC'
+	'dateFormat': 'YYYY-MM-DD HH:mm:ss'
 };
 
 var skRegex = {
