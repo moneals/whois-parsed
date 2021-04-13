@@ -102,11 +102,11 @@ var fiRegex = {
 };
 
 var jpRegex = {
-	'domainName': '\\[Domain Name\\]\\s*([^\\s]+)',
-	'creationDate': '\\[Created on\\]\\s*(.+)',
-	'updatedDate': '\\[Last Updated\\]\\s?(.+)',
-	'expirationDate': '\\[Expires on\\]\\s?(.+)',
-	'status': '\\[Status\\]\\s*(.+)',
+	'domainName': '(?:a\\. )\\[Domain Name\\]\\s*([^\\s]+)',
+	'creationDate': '\\[(Created on|Registered Date)\\]\\s*(.+)',
+	'updatedDate': '\\[Last Updated?\\]\\s?(.+)',
+	'expirationDate': '(?:\\[Expires on\\]|\\[State\\]\\s+Connected)\\s*\\(?(.+)\\)?',
+	'status': '\\[Stat(?:us|e)\\]\\s*(.+)',
 	'notFound': 'No match!!',
 	'dateFormat': 'YYYY/MM/DD'
 };

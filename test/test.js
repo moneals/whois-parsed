@@ -179,6 +179,9 @@ describe('#whoisParser integration tests', function() {
     it('known .jp should not be available and have data', async function () {
       await testNotAvailable('google', '.jp', {excludedFields: ['registrar']});
     });
+    it('known .ad.jp should not be available and have data', async function () {
+      await testNotAvailable('nic.ad', '.jp', {excludedFields: ['registrar']});
+    });
     it('random .jp domain should be available', async function() {
       await testAvailable('.jp');
     });
