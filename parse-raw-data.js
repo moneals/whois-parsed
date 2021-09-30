@@ -79,7 +79,8 @@ var frRegex = {
 	'status': 'status: *(.+)',
 	'updatedDate': 'last-update: *(.+)',
 	'notFound': 'No entries found in ',
-	'dateFormat': 'YYYY-MM-DDThh:mm:ssZ'
+	'dateFormat': 'YYYY-MM-DDThh:mm:ssZ',
+	'rateLimited': 'Too many requests...'
 };
 
 var nlRegex = {
