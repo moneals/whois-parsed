@@ -28,7 +28,7 @@ var orgRegex = {
 	'creationDate': 'Creation Date: *(.+)',
 	'expirationDate': 'Expir\\w+ Date: *(.+)',
 	'status': 'Status: *(.+)',
-	'notFound': '^NOT FOUND'
+	'notFound': '^(NOT FOUND|Domain not found)'
 };
 
 var auRegex = {
@@ -45,7 +45,7 @@ var usRegex = {
 	'registrar': 'Registrar: *(.+)',
 	'status': 'Domain Status: *(.+)',
 	'creationDate': 'Creation Date: *(.+)',
-	'expirationDate': 'Registry Expiry Date: *(.+)',
+	'expirationDate': 'Registrar Registration Expiration Date: *(.+)',
 	'updatedDate': 'Updated Date: *(.+)',
 	'notFound': '^No Data Found',
 	'dateFormat': 'YYYY-MM-DDThh:mm:ssZ'
@@ -78,7 +78,7 @@ var frRegex = {
 	'expirationDate': 'Expir\\w+ Date:\\s?(.+)',
 	'status': 'status: *(.+)',
 	'updatedDate': 'last-update: *(.+)',
-	'notFound': 'No entries found in ',
+	'notFound': '(No entries found in |%% NOT FOUND)',
 	'dateFormat': 'YYYY-MM-DDThh:mm:ssZ'
 };
 
@@ -208,13 +208,13 @@ var infoRegex = {
 	'creationDate': 'Creation Date: *(.+)',
 	'expirationDate': 'Registrar Registration Expiration Date: *(.+)',
 	'status': 'Status: *(.+)',
-	'notFound': 'NOT FOUND'
+	'notFound': '^(NOT FOUND|Domain not found)'
 	//'dateFormat':       'YYYY-MM-DDTHH:mm:ssZ'
 };
 
 var kgRegex = {
 	'domainName': '^Domain\\s*([^\\s]+)',
-	'registrar': 'Domain support: \\s*(.+)',
+	//'registrar': 'Domain support: \\s*(.+)',
 	'creationDate': 'Record created:\\s*(.+)',
 	'expirationDate': 'Record expires on:\\s*(.+)',
 	'updatedDate': 'Record last updated on:\\s*(.+)',
@@ -410,12 +410,13 @@ var parseRawData = function (rawData, domain) {
         result.isAvailable = false;
     }
 
-    // console.log('rawData: "' + rawData + '"');
+    // console.log('DEBUG rawData2: "' + rawData + '"');
     // console.log('result ' + JSON.stringify(result));
 
     // Check to make sure certain fields are set for unknown TLDs to ensure the default pattern matching worked
     // If not then throw TLD not supported error.
     if (unknownTLD) {
+		// console.log('DEBUG: ' + JSON.stringify(result))
         if (!result.isAvailable) {
             if (!result.hasOwnProperty('creationDate') || !result.hasOwnProperty('expirationDate') ||
                 !result.hasOwnProperty('updatedDate') || !result.hasOwnProperty('registrar')) {

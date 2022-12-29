@@ -18,6 +18,7 @@ module.exports = {
 	  var result = {};
 	  try {
 		  var rawData = await lookup(domain, options || {});
+		  // console.log('DEBUG: raw data: ' + rawData)
 
 		  if ( typeof rawData === 'object' ) {
 			  result = rawData.map(function(data) {

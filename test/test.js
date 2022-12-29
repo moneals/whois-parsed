@@ -275,7 +275,7 @@ describe('#whoisParser integration tests', function() {
     });
 
     it('known .kg should not be available and have data', async function () {
-      await testNotAvailable('google', '.kg', {excludedFields: ['status']});
+      await testNotAvailable('google', '.kg', {excludedFields: ['status', 'registrar']});
     });
     it('random .kg domain should be available', async function() {
       await testAvailable('.kg');
@@ -343,7 +343,7 @@ describe('#whoisParser integration tests', function() {
         await testAvailable('.asia');
     });
     it('known generic tld domain (.io) should not be available and have data', async function () {
-        await testNotAvailable('facebook', '.io', {excludedFields: ['status']} );
+        await testNotAvailable('google', '.io', {excludedFields: ['status']} );
     });
     it('random generic tld domain (.io) should be available', async function() {
         await testAvailable('.io');
